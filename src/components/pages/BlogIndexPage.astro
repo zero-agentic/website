@@ -1,0 +1,61 @@
+---
+import { getSiteContent } from '../../content/site'
+import { getPosts, postSlug } from '../../content/posts'
+import type { Locale } from '../../content/site/types'
+import { localizePath } from '../../i18n/routing'
+import { formatDate } from '../../i18n/date'
+import PageHeader from '../PageHeader.astro'
+import Arrow from '../Arrow.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const c = getSiteContent(locale)
+const b = c.blog
+const posts = await getPosts(locale)
+---
+
+<PageHeader n={b.n} heading={b.heading}>
+  <p class="surface mt-7 mb-0 max-w-[66ch] text-[1.0625rem] leading-relaxed text-fg-2">
+    {b.intro}
+  </p>
+</PageHeader>
+
+<section class="shell">
+  {
+    posts.length === 0 ? (
+      <p class="border-y border-line py-10 text-[0.9375rem] text-fg-3">{b.empty}</p>
+    ) : (
+      <div class="border-t border-line">
+        {posts.map((post) => (
+          <article class="row">
+            <a
+              href={localizePath(`/blog/${postSlug(post)}`, locale)}
+              class="group grid gap-x-10 gap-y-3 no-underline md:grid-cols-[9rem_1fr_auto] md:items-baseline"
+            >
+              <time
+                class="text-[0.875rem] text-fg-3 tabular"
+                datetime={post.data.pubDate.toISOString()}
+              >
+                {formatDate(post.data.pubDate, locale)}
+              </time>
+
+              <div>
+                <h2 class="title-md transition-colors duration-200 group-hover:text-brand-2-ink">
+                  {post.data.title}
+                </h2>
+                <p class="mt-3 mb-0 max-w-[64ch] text-[0.9375rem] leading-relaxed text-fg-2">
+                  {post.data.description}
+                </p>
+              </div>
+
+              <Arrow class="hidden text-fg-3 transition-all duration-300 group-hover:translate-x-1 group-hover:text-fg md:block" />
+            </a>
+          </article>
+        ))}
+      </div>
+    )
+  }
+</section>

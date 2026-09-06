@@ -1,0 +1,38 @@
+---
+import { render } from 'astro:content'
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import BlogPostPage from '../../components/pages/BlogPostPage.astro'
+import { getSiteContent } from '../../content/site'
+import { getPostPaths, postSlug } from '../../content/posts'
+
+const locale = 'en' as const
+
+export async function getStaticPaths() {
+  return getPostPaths('en')
+}
+
+const { post, hasAlternate } = Astro.props
+const { Content } = await render(post)
+const c = getSiteContent(locale)
+---
+
+<BaseLayout
+  locale={locale}
+  title={`${post.data.title} — ${c.meta.siteName}`}
+  description={post.data.description}
+  hasAlternate={hasAlternate}
+  article={{
+    headline: post.data.title,
+    datePublished: post.data.pubDate.toISOString(),
+    dateModified: post.data.updatedDate?.toISOString(),
+  }}
+  breadcrumbs={[
+    { name: 'Home', path: '/' },
+    { name: c.blog.heading, path: '/blog' },
+    { name: post.data.title, path: `/blog/${postSlug(post)}` },
+  ]}
+>
+  <BlogPostPage locale={locale} post={post}>
+    <Content />
+  </BlogPostPage>
+</BaseLayout>

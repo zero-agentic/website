@@ -1,0 +1,22 @@
+---
+/** 内页页头：场作为背景，编号与标题浮在其上。slot 承接引言等后续内容。 */
+import LatentField from './LatentField.astro'
+import SectionHeading from './SectionHeading.astro'
+
+interface Props {
+  /** 区段编号 */
+  n?: string
+  heading: string
+}
+
+const { n, heading } = Astro.props
+---
+
+<section class="relative isolate overflow-hidden pb-16 pt-32 sm:pb-24 sm:pt-40">
+  <LatentField variant="page" />
+
+  <div class="shell">
+    <SectionHeading n={n} title={heading} as="h1" class="surface max-w-[20ch]" />
+    <slot />
+  </div>
+</section>

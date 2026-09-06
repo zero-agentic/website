@@ -1,0 +1,150 @@
+---
+import { getSiteContent } from '../../content/site'
+import type { BrandTone } from '../../brand'
+import type { Locale } from '../../content/site/types'
+import { localizePath } from '../../i18n/routing'
+import LatentField from '../LatentField.astro'
+import Bead from '../Bead.astro'
+import SpecList from '../SpecList.astro'
+import SectionHeading from '../SectionHeading.astro'
+import Arrow from '../Arrow.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const c = getSiteContent(locale)
+const h = c.home
+const caps = h.sections.capabilities
+const prod = h.sections.products
+const contact = h.sections.contact
+
+/** 三条能力各认领一颗球。首屏索引与 01 节共用，同一条能力上下同色 */
+const TONES: BrandTone[] = [2, 3, 1]
+---
+
+<section class="relative isolate flex min-h-[88svh] flex-col">
+  <LatentField variant="hero" />
+
+  {/* 标题、一句话、行动收成一团，浮在余下空间的中部 */}
+  <div class="shell flex w-full flex-1 flex-col justify-center pb-12 pt-32">
+    {/* 两句各占一行：断行可控，且中文句中不会出现拉丁排版才需要的空格 */}
+    <h1 class="title-xl surface max-w-[20ch]">
+      <span class="block">{h.heroLead}</span>
+      <span class="title-soft block">{h.heroTrail}</span>
+    </h1>
+
+    <p
+      class="surface mt-8 mb-0 max-w-[52ch] text-[clamp(1rem,1.3vw,1.125rem)] leading-relaxed text-fg-2"
+      style="animation-delay:100ms"
+    >
+      {h.generalDescription}
+    </p>
+
+    <div
+      class="surface mt-10 flex flex-wrap items-center gap-x-7 gap-y-4"
+      style="animation-delay:180ms"
+    >
+      <a href={localizePath('/contact', locale)} class="btn btn-solid group">
+        {h.contactCta}
+        <Arrow class="transition-transform duration-300 group-hover:translate-x-1" />
+      </a>
+      <span class="chip">{h.statusLabel}</span>
+    </div>
+  </div>
+
+  {/* 首屏底沿的能力索引：既接住空白，也是往下读的引子 */}
+  <div class="shell surface w-full border-t border-line pb-12 pt-7" style="animation-delay:260ms">
+    <ul class="m-0 grid list-none gap-x-10 gap-y-5 p-0 sm:grid-cols-3">
+      {
+        h.heroIndex.map((item, i) => (
+          <li class="flex items-baseline gap-3">
+            <Bead tone={TONES[i % TONES.length]} size="sm" />
+            <div>
+              <p class="m-0 text-[0.9375rem] font-semibold text-fg">{item.name}</p>
+              <p class="mt-1 mb-0 text-[0.875rem] leading-snug text-fg-3">{item.note}</p>
+            </div>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<section class="shell pt-28 sm:pt-36">
+  <SectionHeading n={caps.n} title={caps.title} class="max-w-[20ch]" />
+  <p class="mt-7 mb-14 max-w-[68ch] text-[1.0625rem] leading-relaxed text-fg-2">{caps.intro}</p>
+
+  <div>
+    {
+      caps.items.map((cap, i) => (
+        <article class="row grid gap-x-12 gap-y-6 lg:grid-cols-[1.15fr_1fr]">
+          <div class="flex gap-5">
+            <Bead tone={TONES[i % TONES.length]} class="mt-1" />
+            <div>
+              <h3 class="title-md">{cap.name}</h3>
+              <p class="mt-3 mb-0 max-w-[52ch] text-[0.9375rem] leading-relaxed text-fg-2">
+                {cap.summary}
+              </p>
+            </div>
+          </div>
+
+          <SpecList locale={locale} rows={cap.specs} class="lg:pt-1" />
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<section class="relative isolate mt-28 overflow-hidden py-28 sm:mt-36 sm:py-36">
+  <LatentField variant="band" />
+
+  <div class="shell">
+    <SectionHeading n={prod.n} title={prod.title} class="max-w-[20ch]" />
+    <p class="mt-7 mb-14 max-w-[68ch] text-[1.0625rem] leading-relaxed text-fg-2">{prod.intro}</p>
+
+    <article class="grid gap-x-12 gap-y-10 lg:grid-cols-[1.15fr_1fr]">
+      <div>
+        <h3 class="title-lg">{prod.entry.name}</h3>
+        <p class="mt-4 mb-0 text-[1.125rem] leading-snug text-fg">{prod.entry.tagline}</p>
+        <p class="mt-6 mb-0 max-w-[54ch] text-[0.9375rem] leading-relaxed text-fg-2">
+          {prod.entry.description}
+        </p>
+
+        <a href={localizePath('/products', locale)} class="btn btn-outline group mt-9 !px-5">
+          {prod.readMore}
+          <Arrow class="transition-transform duration-300 group-hover:translate-x-1" />
+        </a>
+      </div>
+
+      <SpecList locale={locale} rows={prod.entry.specs} class="lg:pt-2" />
+    </article>
+  </div>
+</section>
+
+<section class="shell pt-28 sm:pt-36">
+  <SectionHeading n={contact.n} title={contact.title} class="max-w-[20ch]" />
+
+  <div class="mt-10 grid gap-x-12 gap-y-8 lg:grid-cols-[1.15fr_1fr]">
+    <p class="m-0 max-w-[52ch] text-[1.0625rem] leading-relaxed text-fg-2">{contact.intro}</p>
+
+    <div>
+      <a
+        href={`mailto:${c.contact.email}`}
+        class="block font-display text-[clamp(1.25rem,3vw,2rem)] font-medium tracking-[-0.035em] text-fg no-underline transition-colors duration-200 hover:text-brand-2-ink"
+      >
+        <span class="break-all underline decoration-brand-2 decoration-2 underline-offset-[0.3em]">
+          {c.contact.email}
+        </span>
+      </a>
+      <a
+        href={localizePath('/contact', locale)}
+        class="group mt-7 inline-flex items-center gap-2.5 text-[0.9375rem] font-medium text-fg-2 no-underline transition-colors duration-200 hover:text-fg"
+      >
+        {contact.cta}
+        <Arrow class="transition-transform duration-300 group-hover:translate-x-1" />
+      </a>
+    </div>
+  </div>
+</section>

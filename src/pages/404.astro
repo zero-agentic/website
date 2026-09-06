@@ -1,0 +1,44 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro'
+import LatentField from '../components/LatentField.astro'
+import Arrow from '../components/Arrow.astro'
+import { getSiteContent } from '../content/site'
+
+// 静态站的 404 只有一份，语言无法从路径推断，统一走英文。
+const locale = 'en' as const
+const c = getSiteContent(locale)
+---
+
+<BaseLayout
+  locale={locale}
+  title={`Page not found — ${c.meta.siteName}`}
+  description="The requested page does not exist."
+  noindex
+  altHref="/zh/"
+>
+  <section class="relative isolate flex min-h-[calc(100svh-6rem)] flex-col overflow-hidden">
+    <LatentField variant="hero" />
+
+    <div class="shell mt-auto w-full pb-24 pt-32">
+      <p class="m-0 font-display text-[clamp(4rem,14vw,9rem)] font-medium leading-none tracking-[-0.05em] text-fg-3 tabular">
+        404
+      </p>
+
+      <h1 class="title-xl mt-6 max-w-[14ch]">
+        This page <span class="title-soft">does not exist.</span>
+      </h1>
+
+      <p class="mt-8 mb-0 max-w-[52ch] text-[1.0625rem] leading-relaxed text-fg-2">
+        The link may be out of date, or the address may have been mistyped.
+      </p>
+
+      <div class="mt-10 flex flex-wrap gap-3">
+        <a href="/" class="btn btn-solid group">
+          Back to the start
+          <Arrow class="transition-transform duration-300 group-hover:translate-x-1" />
+        </a>
+        <a href="/contact/" class="btn btn-outline">Report a broken link</a>
+      </div>
+    </div>
+  </section>
+</BaseLayout>

@@ -1,0 +1,33 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import ProductsPage from '../../components/pages/ProductsPage.astro'
+import { getSiteContent } from '../../content/site'
+
+const locale = 'zh' as const
+const c = getSiteContent(locale)
+---
+
+<BaseLayout
+  locale={locale}
+  title={c.products.title}
+  description={c.products.description}
+  breadcrumbs={[
+    { name: '首页', path: '/' },
+    { name: c.products.heading, path: '/products' },
+  ]}
+  mainEntity={{
+    '@type': 'Product',
+    name: c.products.entry.name,
+    description: c.products.entry.description,
+    category: 'AI 设计生成工具',
+    brand: { '@type': 'Brand', name: c.meta.siteName },
+    manufacturer: { '@id': 'https://zero-agentic.com/#organization' },
+    additionalProperty: {
+      '@type': 'PropertyValue',
+      name: '开发状态',
+      value: c.products.entry.specs.find(({ stamp }) => stamp)?.value,
+    },
+  }}
+>
+  <ProductsPage locale={locale} />
+</BaseLayout>

@@ -1,0 +1,62 @@
+---
+import { getSiteContent } from '../../content/site'
+import type { BlogPost } from '../../content/posts'
+import type { Locale } from '../../content/site/types'
+import { localizePath } from '../../i18n/routing'
+import { formatDate } from '../../i18n/date'
+import Arrow from '../Arrow.astro'
+
+interface Props {
+  locale: Locale
+  post: BlogPost
+}
+
+const { locale, post } = Astro.props
+const b = getSiteContent(locale).blog
+---
+
+{/* 文章是阅读面：不铺场，让排版独自工作 */}
+<article class="shell pb-20 pt-32 sm:pt-40">
+  <a
+    href={localizePath('/blog', locale)}
+    class="group inline-flex items-center gap-2.5 text-[0.875rem] font-medium text-fg-2 no-underline transition-colors duration-200 hover:text-fg"
+  >
+    <Arrow dir="left" class="transition-transform duration-300 group-hover:-translate-x-1" />
+    {b.backLabel}
+  </a>
+
+  <header class="mt-10 max-w-[24ch]">
+    <h1 class="title-xl">{post.data.title}</h1>
+  </header>
+
+  <p class="mt-8 mb-0 max-w-[62ch] text-[1.1875rem] leading-relaxed text-fg-2">
+    {post.data.description}
+  </p>
+
+  <dl class="mt-10 mb-0 flex flex-wrap items-baseline gap-x-10 gap-y-2 border-t border-line pt-6">
+    <div class="flex items-baseline gap-2.5">
+      <dt class="label m-0">{b.publishedLabel}</dt>
+      <dd class="m-0 text-[0.875rem] text-fg tabular">
+        <time datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate, locale, 'long')}
+        </time>
+      </dd>
+    </div>
+    {
+      post.data.updatedDate && (
+        <div class="flex items-baseline gap-2.5">
+          <dt class="label m-0">{b.updatedLabel}</dt>
+          <dd class="m-0 text-[0.875rem] text-fg tabular">
+            <time datetime={post.data.updatedDate.toISOString()}>
+              {formatDate(post.data.updatedDate, locale, 'long')}
+            </time>
+          </dd>
+        </div>
+      )
+    }
+  </dl>
+
+  <div class="prose mt-14">
+    <slot />
+  </div>
+</article>

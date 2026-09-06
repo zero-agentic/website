@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro'
+import AboutPage from '../../components/pages/AboutPage.astro'
+import { getSiteContent } from '../../content/site'
+
+const locale = 'zh' as const
+const c = getSiteContent(locale)
+---
+
+<BaseLayout
+  locale={locale}
+  title={c.about.title}
+  description={c.about.description}
+  schemaType="AboutPage"
+  breadcrumbs={[
+    { name: '首页', path: '/' },
+    { name: c.about.heading, path: '/about' },
+  ]}
+>
+  <AboutPage locale={locale} />
+</BaseLayout>

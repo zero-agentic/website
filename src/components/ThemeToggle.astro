@@ -1,0 +1,72 @@
+---
+import { getSiteContent } from '../content/site'
+import type { Locale } from '../content/site/types'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const c = getSiteContent(locale)
+---
+
+<button
+  type="button"
+  data-theme-toggle
+  class="grid h-9 w-9 place-items-center rounded-full border border-line text-fg-2 transition-colors duration-200 hover:border-line-strong hover:text-fg"
+  aria-label={c.ui.themeToggle}
+  title={c.ui.themeToggle}
+>
+  {/* 两枚图标都在 DOM 里，靠 data-theme 决定谁可见 —— 切换时不重排。点击由文档级脚本接住。 */}
+  <svg
+    class="theme-icon theme-icon--sun h-[18px] w-[18px]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    aria-hidden="true"
+  >
+    <circle cx="12" cy="12" r="4.2"></circle>
+    <path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M18.4 5.6L17 7M7 17l-1.4 1.4"
+    ></path>
+  </svg>
+  <svg
+    class="theme-icon theme-icon--moon h-[18px] w-[18px]"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.6"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+  >
+    <path d="M20 13.4A8.2 8.2 0 1 1 10.6 4a6.6 6.6 0 0 0 9.4 9.4z"></path>
+  </svg>
+</button>
+
+<style>
+  [data-theme-toggle] {
+    position: relative;
+  }
+
+  .theme-icon {
+    grid-area: 1 / 1;
+    transition:
+      opacity 0.28s ease,
+      transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  /* 深色模式显示太阳（点它去亮），浅色显示月亮（点它去暗） */
+  :global([data-theme='dark']) .theme-icon--moon,
+  :global([data-theme='light']) .theme-icon--sun {
+    opacity: 0;
+    transform: rotate(-70deg) scale(0.6);
+  }
+
+  :global([data-theme='dark']) .theme-icon--sun,
+  :global([data-theme='light']) .theme-icon--moon {
+    opacity: 1;
+    transform: none;
+  }
+</style>

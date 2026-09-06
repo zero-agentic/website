@@ -1,0 +1,65 @@
+---
+import type { ISpecRow, Locale } from '../content/site/types'
+import { getSiteContent } from '../content/site'
+
+interface Props {
+  locale: Locale
+  label?: string
+  rows: ISpecRow[]
+  /** 脚注锚点前缀，同页多张表时避免 id 冲突。不传表示本页没有脚注区，上标引用不渲染 */
+  refPrefix?: string
+  class?: string
+}
+
+const { locale, label, rows, refPrefix, class: className } = Astro.props
+const ui = getSiteContent(locale).ui
+---
+
+<div class:list={['w-full', className]}>
+  {
+    label && (
+      <>
+        <h2 class="label m-0">{label}</h2>
+        <hr class="mt-3 mb-0 border-0 border-t border-line" />
+      </>
+    )
+  }
+
+  <dl class="m-0">
+    {
+      rows.map((row) => (
+        <div class="grid grid-cols-[minmax(6rem,auto)_1fr] gap-x-6 border-b border-line">
+          <dt class="py-3 text-[0.875rem] text-fg-3">{row.label}</dt>
+          <dd class="m-0 flex items-center gap-1.5 py-3 text-[0.9375rem] text-fg tabular">
+            {row.value === null ? (
+              <abbr class="tbd" title={ui.tbdExplain}>
+                <span aria-hidden="true">TBD</span>
+                <span class="sr-only">{ui.tbdExplain}</span>
+              </abbr>
+            ) : row.stamp ? (
+              <span class="chip !text-brand-1-ink">{row.value}</span>
+            ) : row.href ? (
+              <a
+                href={row.href}
+                class="underline decoration-line-strong underline-offset-4 transition-colors duration-200 hover:decoration-brand-2"
+              >
+                {row.value}
+              </a>
+            ) : (
+              <span>{row.value}</span>
+            )}
+            {refPrefix && row.ref && (
+              <a
+                href={`#${refPrefix}-${row.ref}`}
+                aria-label={`${ui.footnote} ${row.ref}`}
+                class="align-super text-[0.6875rem] font-semibold text-brand-2-ink no-underline transition-opacity duration-200 hover:opacity-70"
+              >
+                {row.ref}
+              </a>
+            )}
+          </dd>
+        </div>
+      ))
+    }
+  </dl>
+</div>

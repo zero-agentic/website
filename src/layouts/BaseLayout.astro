@@ -1,0 +1,290 @@
+---
+import '../styles/global.css'
+import { getSiteContent } from '../content/site'
+import { CONTACT_EMAIL } from '../content/site/contact-email'
+import type { Locale } from '../content/site/types'
+import { LOCALE_TAGS, alternatePath, stripLocale, localizePath } from '../i18n/routing'
+import SiteNav from '../components/SiteNav.astro'
+import SiteFooter from '../components/SiteFooter.astro'
+
+interface Props {
+  locale: Locale
+  title: string
+  description: string
+  /** 当前页面最具体的 schema.org 页面类型 */
+  schemaType?: 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage'
+  /** 页面描述的主要实体，例如产品页上的 Product */
+  mainEntity?: Record<string, unknown>
+  /** 博客正文的 Article 字段；存在时输出 BlogPosting */
+  article?: {
+    headline: string
+    datePublished: string
+    dateModified?: string
+  }
+  /** 机器可读面包屑；path 使用与语言无关的站内路径 */
+  breadcrumbs?: { name: string; path: string }[]
+  /** 静态站只有一份 404，它没有对应语言版本：跳过 canonical/hreflang 并 noindex */
+  noindex?: boolean
+  /** 覆盖语言切换目标，供没有对语言镜像的页面使用 */
+  altHref?: string
+  /** 另一语言是否存在。为 false 时不发 hreflang，避免把 404 登记为备选版本 */
+  hasAlternate?: boolean
+}
+
+const {
+  locale,
+  title,
+  description,
+  schemaType = 'WebPage',
+  mainEntity,
+  article,
+  breadcrumbs = [],
+  noindex,
+  altHref,
+  hasAlternate = true,
+} = Astro.props
+const c = getSiteContent(locale)
+
+const bare = stripLocale(Astro.url.pathname)
+const canonical = new URL(localizePath(bare, locale), Astro.site).href
+const enHref = new URL(localizePath(bare, 'en'), Astro.site).href
+const zhHref = new URL(localizePath(bare, 'zh'), Astro.site).href
+const altPath = altHref ?? alternatePath(Astro.url.pathname, locale)
+
+const siteUrl = new URL('/', Astro.site).href
+const organizationId = `${siteUrl}#organization`
+const websiteId = `${siteUrl}#website`
+const webpageId = `${canonical}#webpage`
+const breadcrumbId = `${canonical}#breadcrumb`
+
+const organizationJsonLd = {
+  '@type': 'Organization',
+  '@id': organizationId,
+  name: c.meta.siteName,
+  legalName: 'Zero Agentic LLC',
+  url: siteUrl,
+  logo: {
+    '@type': 'ImageObject',
+    url: new URL('/logo.svg', Astro.site).href,
+    width: 512,
+    height: 512,
+  },
+  description: c.meta.defaultDescription,
+  email: CONTACT_EMAIL,
+  knowsAbout:
+    locale === 'zh'
+      ? ['AI 图片生成', 'AI 视频生成', 'AI 设计生成']
+      : ['AI image generation', 'AI video generation', 'AI design generation'],
+}
+
+const websiteJsonLd = {
+  '@type': 'WebSite',
+  '@id': websiteId,
+  url: siteUrl,
+  name: c.meta.siteName,
+  publisher: { '@id': organizationId },
+  inLanguage: ['en-US', 'zh-CN'],
+}
+
+const pageJsonLd: Record<string, unknown> = {
+  '@type': schemaType,
+  '@id': webpageId,
+  url: canonical,
+  name: title,
+  description,
+  inLanguage: LOCALE_TAGS[locale],
+  isPartOf: { '@id': websiteId },
+  about: { '@id': organizationId },
+}
+
+const graph: Record<string, unknown>[] = [organizationJsonLd, websiteJsonLd, pageJsonLd]
+
+if (breadcrumbs.length > 0) {
+  graph.push({
+    '@type': 'BreadcrumbList',
+    '@id': breadcrumbId,
+    itemListElement: breadcrumbs.map((item, index) => ({
+      '@type': 'ListItem',
+      position: index + 1,
+      name: item.name,
+      item: new URL(localizePath(item.path, locale), Astro.site).href,
+    })),
+  })
+  pageJsonLd.breadcrumb = { '@id': breadcrumbId }
+}
+
+if (mainEntity) {
+  const entityId = `${canonical}#main-entity`
+  graph.push({ ...mainEntity, '@id': entityId, url: canonical })
+  pageJsonLd.mainEntity = { '@id': entityId }
+}
+
+if (article) {
+  const articleId = `${canonical}#article`
+  graph.push({
+    '@type': 'BlogPosting',
+    '@id': articleId,
+    url: canonical,
+    headline: article.headline,
+    description,
+    datePublished: article.datePublished,
+    dateModified: article.dateModified ?? article.datePublished,
+    inLanguage: LOCALE_TAGS[locale],
+    mainEntityOfPage: { '@id': webpageId },
+    author: { '@id': organizationId },
+    publisher: { '@id': organizationId },
+  })
+  pageJsonLd.mainEntity = { '@id': articleId }
+}
+
+const pageJsonLdDocument = {
+  '@context': 'https://schema.org',
+  '@graph': graph,
+}
+---
+
+<!doctype html>
+<html lang={LOCALE_TAGS[locale]} data-theme="dark" data-theme-boot>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    {/* 必须排在主题脚本之前 —— 脚本要在首帧就把它改成当前主题的底色 */}
+    <meta name="theme-color" content="#05050c" />
+
+    {/*
+      主题必须在首帧之前定好，否则深色用户会先看到一闪的浅色。
+      同步执行、不可延迟、不可打包 —— 这是 is:inline 的正当用途。
+      切换按钮也由这里的委托接住：主题是文档级状态，只该有这一份逻辑。
+    */}
+    <script is:inline>
+      ;(function () {
+        var KEY = 'za-theme'
+        // 浏览器色条跟着页面底色走，否则地址栏会与页面撞色
+        var BAR = { dark: '#05050c', light: '#f7f5f1' }
+
+        function apply(theme) {
+          document.documentElement.dataset.theme = theme
+          var bar = document.querySelector('meta[name="theme-color"]')
+          if (bar) bar.setAttribute('content', BAR[theme])
+        }
+
+        var stored = null
+        try {
+          stored = localStorage.getItem(KEY)
+        } catch (e) {}
+
+        // 深色是品牌本色（标识画在 #05050C 上），因此是无条件默认，
+        // 不读 prefers-color-scheme。浅色只在用户显式切换过之后才出现。
+        apply(stored === 'light' ? 'light' : 'dark')
+
+        // 首帧上色完成，交还过渡控制权
+        requestAnimationFrame(function () {
+          delete document.documentElement.dataset.themeBoot
+        })
+
+        document.addEventListener('click', function (e) {
+          if (!(e.target instanceof Element) || !e.target.closest('[data-theme-toggle]')) return
+          var next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light'
+          apply(next)
+          try {
+            localStorage.setItem(KEY, next)
+          } catch (err) {}
+          // 场需要跟着换底色
+          document.dispatchEvent(new CustomEvent('themechange', { detail: next }))
+        })
+      })()
+    </script>
+
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    {
+      noindex ? (
+        <meta name="robots" content="noindex" />
+      ) : (
+        <>
+          <link rel="canonical" href={canonical} />
+          {hasAlternate && (
+            <>
+              <link rel="alternate" hreflang="en" href={enHref} />
+              <link rel="alternate" hreflang="zh" href={zhHref} />
+              <link rel="alternate" hreflang="x-default" href={enHref} />
+            </>
+          )}
+        </>
+      )
+    }
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content={article ? 'article' : 'website'} />
+    <meta property="og:site_name" content="Zero Agentic" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale === 'zh' ? 'zh_CN' : 'en_US'} />
+    <meta property="og:locale:alternate" content={locale === 'zh' ? 'en_US' : 'zh_CN'} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    {article && <meta property="article:published_time" content={article.datePublished} />}
+    {article?.dateModified && (
+      <meta property="article:modified_time" content={article.dateModified} />
+    )}
+
+    {!noindex && (
+      <script type="application/ld+json" is:inline set:html={JSON.stringify(pageJsonLdDocument)} />
+    )}
+  </head>
+
+  <body>
+    <!--
+      DIRECTION CONTRACT — ZERO AGENTIC — LATENT FIELD
+
+      THESIS: A company that builds generative models should not decorate its
+      site with pictures someone placed there. The first viewport is computed on
+      arrival, from the company's own four brand spheres, and never repeats.
+      Refuses the datasheet this site used to be, and the flat card grid that is
+      this category's other default.
+
+      OWN-WORLD: The logo's own palette, finally used — orange #F9861F, blue
+      #33ADEC, violet #AE87EF, pink #E692BA over the #05050C the mark was drawn
+      on. A live WebGL simplex field carries them; content sits on unlit ground
+      so type never fights the colour. Bricolage Grotesque works its width axis
+      for hierarchy instead of reaching for another colour; Manrope carries the
+      prose. Full light/dark parity, both verified to AA.
+
+      STORY: A visitor sees the company's capability before reading a claim
+      about it, learns what it builds, sees the one product honestly marked in
+      development, and leaves knowing where to send mail.
+
+      FIRST VIEWPORT: Full-bleed computed field. Wordmark and a single sentence
+      set at display scale over its unlit lower third, the second clause dropped
+      to a narrow light width rather than a second colour. Primary action and
+      the in-development status sit on one baseline beneath a hairline rule.
+
+      FORM: Generative field. Replaces the semiconductor datasheet after the
+      user rejected it as visually cold; chosen from three built prototypes
+      rather than ASCII wireframes, because wireframes are what mis-sold the
+      last direction.
+
+      FINISH: unreviewed and undocumented is unfinished; this build ends with
+      the finish review, the verdict, DESIGN.md, and every shipping raster
+      carrying its provenance.
+    -->
+    <a
+      href="#content"
+      class="label sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-full focus:border focus:border-line-strong focus:bg-bg focus:px-4 focus:py-2 focus:!text-fg"
+      >{c.nav.skipToContent}</a
+    >
+
+    <SiteNav locale={locale} altPath={altPath} />
+
+    <main id="content">
+      <slot />
+    </main>
+
+    <SiteFooter locale={locale} />
+  </body>
+</html>

@@ -1,0 +1,18 @@
+---
+import type { BrandTone } from '../brand'
+
+interface Props {
+  /** 认领标识里的哪一颗球。1 橙 2 蓝 3 紫 4 粉 */
+  tone: BrandTone
+  /** sm 用于与小号文字齐平的场合 */
+  size?: 'md' | 'sm'
+  class?: string
+}
+
+const { tone, size = 'md', class: className } = Astro.props
+---
+
+<span
+  class:list={['bead', size === 'sm' && 'bead--sm', className]}
+  data-tone={tone}
+  aria-hidden="true"></span>

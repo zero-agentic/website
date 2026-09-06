@@ -1,0 +1,356 @@
+---
+/**
+ * 潜空间场：四个品牌色在连续噪声场里流动混合，由 WebGL 实时演算。
+ *
+ * 这是本站视觉的核心主张 —— 一家做生成式模型的公司，首屏不应该是一张
+ * 放上去的图片，而应该是当场算出来的、永不重复的东西。
+ *
+ * 降级链：WebGL 不可用 → CSS 多层径向渐变（静态但同色系，不是空白）。
+ * prefers-reduced-motion → 渲染一帧后停住，画面仍在，只是不动。
+ */
+import type { FieldVariant } from '../brand'
+
+interface Props {
+  /** 出场方式。同时决定场的亮度与压暗层的形状 —— 文字落在场的哪一带，压暗就从哪里开始 */
+  variant: FieldVariant
+}
+
+const { variant } = Astro.props
+
+/** 场的能量衰减。着色器与 CSS 用的是同一个数 */
+const QUIET: Record<FieldVariant, number> = { hero: 1, page: 0.62, band: 0.62 }
+const quiet = QUIET[variant]
+---
+
+<div
+  class:list={['field', `field--${variant}`]}
+  data-field
+  data-quiet={quiet}
+  style={`--field-quiet:${quiet}`}
+  aria-hidden="true"
+>
+  <div class="field__render">
+    {/* CSS 回退层：WebGL 起来后被盖住，起不来就是它顶上 */}
+    <div class="field__fallback"></div>
+    <canvas class="field__canvas" data-field-canvas></canvas>
+  </div>
+  <div class="field__veil"></div>
+</div>
+
+<style>
+  .field {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .field__render,
+  .field__veil,
+  .field__canvas,
+  .field__fallback {
+    position: absolute;
+    inset: 0;
+  }
+
+  .field__render {
+    opacity: calc(var(--field-opacity) * var(--field-quiet));
+    transition: opacity 0.4s ease;
+  }
+
+  .field__canvas,
+  .field__fallback {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+
+  .field__canvas {
+    opacity: 0;
+    transition: opacity 1.1s ease;
+  }
+
+  .field__canvas[data-ready] {
+    opacity: 1;
+  }
+
+  .field__fallback {
+    background:
+      radial-gradient(46% 52% at 18% 28%, color-mix(in srgb, var(--brand-1) 62%, transparent), transparent 70%),
+      radial-gradient(52% 48% at 78% 34%, color-mix(in srgb, var(--brand-2) 58%, transparent), transparent 72%),
+      radial-gradient(50% 55% at 62% 76%, color-mix(in srgb, var(--brand-3) 60%, transparent), transparent 70%),
+      radial-gradient(40% 44% at 32% 82%, color-mix(in srgb, var(--brand-4) 52%, transparent), transparent 72%);
+    filter: blur(46px) saturate(1.15);
+  }
+
+  /* 首屏：上部保持通透，从标题所在的那一带起逐步压暗，文字始终不与流带争对比度 */
+  .field--hero .field__veil {
+    background:
+      radial-gradient(120% 80% at 50% 8%, transparent 30%, var(--bg) 100%),
+      linear-gradient(to bottom, color-mix(in srgb, var(--bg) 62%, transparent) 0%, color-mix(in srgb, var(--bg) 8%, transparent) 15%, color-mix(in srgb, var(--bg) 26%, transparent) 33%, color-mix(in srgb, var(--bg) 56%, transparent) 46%, color-mix(in srgb, var(--bg) 70%, transparent) 68%, var(--bg) 100%);
+  }
+
+  /* 内页页头：标题紧贴顶端，整片均匀压住，到底沉回背景 */
+  .field--page .field__veil {
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--bg) 68%, transparent) 0%,
+      color-mix(in srgb, var(--bg) 70%, transparent) 55%,
+      var(--bg) 100%
+    );
+  }
+
+  /* 页中区段：两端沉回背景，与前后区段无缝接上 */
+  .field--band .field__veil {
+    background: linear-gradient(
+      to bottom,
+      var(--bg) 0%,
+      color-mix(in srgb, var(--bg) 62%, transparent) 26%,
+      color-mix(in srgb, var(--bg) 62%, transparent) 74%,
+      var(--bg) 100%
+    );
+  }
+</style>
+
+<script>
+  const VERT = 'attribute vec2 p;void main(){gl_Position=vec4(p,0.,1.);}'
+
+  const FRAG = `
+precision highp float;
+uniform vec2 u_res;
+uniform float u_t;
+uniform float u_quiet;
+uniform vec3 u_void;
+uniform vec3 u_c1;
+uniform vec3 u_c2;
+uniform vec3 u_c3;
+uniform vec3 u_c4;
+
+vec3 mod289(vec3 x){return x-floor(x*(1./289.))*289.;}
+vec4 mod289(vec4 x){return x-floor(x*(1./289.))*289.;}
+vec4 permute(vec4 x){return mod289(((x*34.)+1.)*x);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){
+  const vec2 C=vec2(1./6.,1./3.); const vec4 D=vec4(0.,.5,1.,2.);
+  vec3 i=floor(v+dot(v,C.yyy)); vec3 x0=v-i+dot(i,C.xxx);
+  vec3 g=step(x0.yzx,x0.xyz); vec3 l=1.-g;
+  vec3 i1=min(g.xyz,l.zxy); vec3 i2=max(g.xyz,l.zxy);
+  vec3 x1=x0-i1+C.xxx; vec3 x2=x0-i2+C.yyy; vec3 x3=x0-D.yyy;
+  i=mod289(i);
+  vec4 p=permute(permute(permute(i.z+vec4(0.,i1.z,i2.z,1.))+i.y+vec4(0.,i1.y,i2.y,1.))+i.x+vec4(0.,i1.x,i2.x,1.));
+  float n_=.142857142857; vec3 ns=n_*D.wyz-D.xzx;
+  vec4 j=p-49.*floor(p*ns.z*ns.z);
+  vec4 x_=floor(j*ns.z); vec4 y_=floor(j-7.*x_);
+  vec4 x=x_*ns.x+ns.yyyy; vec4 y=y_*ns.x+ns.yyyy; vec4 h=1.-abs(x)-abs(y);
+  vec4 b0=vec4(x.xy,y.xy); vec4 b1=vec4(x.zw,y.zw);
+  vec4 s0=floor(b0)*2.+1.; vec4 s1=floor(b1)*2.+1.; vec4 sh=-step(h,vec4(0.));
+  vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy; vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+  vec3 p0=vec3(a0.xy,h.x); vec3 p1=vec3(a0.zw,h.y); vec3 p2=vec3(a1.xy,h.z); vec3 p3=vec3(a1.zw,h.w);
+  vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));
+  p0*=norm.x; p1*=norm.y; p2*=norm.z; p3*=norm.w;
+  vec4 m=max(.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.); m=m*m;
+  return 42.*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));
+}
+
+void main(){
+  vec2 uv = gl_FragCoord.xy / u_res;
+  vec2 a = vec2(uv.x * (u_res.x/u_res.y), uv.y);
+  float t = u_t * 0.045;
+
+  // 域扭曲：给场以流体的缠绕感，而不是均匀的云
+  vec2 q = vec2(snoise(vec3(a*1.3, t)), snoise(vec3(a*1.3 + 21.7, t)));
+  vec2 r = a + q * 0.62;
+
+  float n1 = snoise(vec3(r*1.15, t*0.9)) * 0.5 + 0.5;
+  float n2 = snoise(vec3(r*1.9 + 13.0, t*1.15)) * 0.5 + 0.5;
+  float n3 = snoise(vec3(r*0.8 - 7.0, t*0.7)) * 0.5 + 0.5;
+
+  vec3 col = mix(u_c2, u_c3, smoothstep(0.18, 0.78, n1));
+  col = mix(col, u_c4, smoothstep(0.34, 0.88, n2) * 0.85);
+  col = mix(col, u_c1, smoothstep(0.40, 0.92, n3) * 0.90);
+
+  // 先推向高饱和，再决定它沉多深 —— 否则混出来的是灰
+  float lum = dot(col, vec3(0.299, 0.587, 0.114));
+  col = mix(vec3(lum), col, 1.28);
+
+  // 大部分画面沉回底色，只留几条流带发亮，保证文字始终可读
+  float energy = pow(smoothstep(0.26, 0.90, n1*0.5 + n2*0.3 + n3*0.38), 1.55);
+  energy *= u_quiet;
+  col = mix(u_void, col, energy);
+
+  // 细颗粒，消除大面积渐变的色带
+  float g = fract(sin(dot(gl_FragCoord.xy, vec2(12.9898,78.233))) * 43758.5453);
+  col += (g - 0.5) * 0.022;
+
+  gl_FragColor = vec4(col, 1.0);
+}`
+
+  interface Renderer {
+    isLost(): boolean
+    syncVoid(): void
+    draw(t: number): void
+  }
+
+  /** 建立一套 GL 资源。拿不到上下文或着色器编译失败就返回 null，交给 CSS 回退层 */
+  function createRenderer(canvas: HTMLCanvasElement, host: HTMLElement): Renderer | null {
+    const gl = canvas.getContext('webgl', {
+      antialias: false,
+      alpha: false,
+      powerPreference: 'low-power',
+    })
+    if (!gl) return null
+
+    const compile = (type: number, src: string) => {
+      const sh = gl.createShader(type)
+      if (!sh) return null
+      gl.shaderSource(sh, src)
+      gl.compileShader(sh)
+      return gl.getShaderParameter(sh, gl.COMPILE_STATUS) ? sh : null
+    }
+
+    const vs = compile(gl.VERTEX_SHADER, VERT)
+    const fs = compile(gl.FRAGMENT_SHADER, FRAG)
+    if (!vs || !fs) return null
+
+    const prog = gl.createProgram()
+    if (!prog) return null
+    gl.attachShader(prog, vs)
+    gl.attachShader(prog, fs)
+    gl.linkProgram(prog)
+    if (!gl.getProgramParameter(prog, gl.LINK_STATUS)) return null
+    gl.useProgram(prog)
+
+    const buf = gl.createBuffer()
+    gl.bindBuffer(gl.ARRAY_BUFFER, buf)
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 3, -1, -1, 3]), gl.STATIC_DRAW)
+    const loc = gl.getAttribLocation(prog, 'p')
+    gl.enableVertexAttribArray(loc)
+    gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0)
+
+    const uRes = gl.getUniformLocation(prog, 'u_res')
+    const uT = gl.getUniformLocation(prog, 'u_t')
+    const uVoid = gl.getUniformLocation(prog, 'u_void')
+    gl.uniform1f(gl.getUniformLocation(prog, 'u_quiet'), Number(host.dataset.quiet) || 1)
+
+    // 品牌四色从 CSS 变量读，不在着色器里另写一份
+    const cssRgb = (name: string): [number, number, number] => {
+      const hex = getComputedStyle(document.documentElement).getPropertyValue(name).trim().slice(1)
+      const n = parseInt(hex, 16)
+      return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]
+    }
+    const set3 = (loc: WebGLUniformLocation | null, c: [number, number, number]) =>
+      gl.uniform3f(loc, c[0], c[1], c[2])
+    set3(gl.getUniformLocation(prog, 'u_c1'), cssRgb('--brand-1'))
+    set3(gl.getUniformLocation(prog, 'u_c2'), cssRgb('--brand-2'))
+    set3(gl.getUniformLocation(prog, 'u_c3'), cssRgb('--brand-3'))
+    set3(gl.getUniformLocation(prog, 'u_c4'), cssRgb('--brand-4'))
+
+    let w = 0
+    let h = 0
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.6)
+      // 下限 1px：宿主尚未布局时若写入 0，u_res 会让着色器除零
+      const cw = Math.max(1, Math.round(host.clientWidth * dpr))
+      const ch = Math.max(1, Math.round(host.clientHeight * dpr))
+      if (cw === w && ch === h) return
+      w = cw
+      h = ch
+      canvas.width = cw
+      canvas.height = ch
+      gl.viewport(0, 0, cw, ch)
+      gl.uniform2f(uRes, cw, ch)
+    }
+
+    const renderer: Renderer = {
+      isLost: () => gl.isContextLost(),
+
+      // 场的底色跟随主题，从 --bg 读，不另写一份
+      syncVoid() {
+        set3(uVoid, cssRgb('--bg'))
+      },
+
+      draw(t) {
+        resize()
+        gl.uniform1f(uT, t)
+        gl.drawArrays(gl.TRIANGLES, 0, 3)
+      },
+    }
+
+    renderer.syncVoid()
+    return renderer
+  }
+
+  function boot(host: HTMLElement) {
+    const canvas = host.querySelector<HTMLCanvasElement>('[data-field-canvas]')
+    if (!canvas) return
+
+    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)')
+    const seed = Math.random() * 900 // 每次加载相位不同 —— 场永不重复
+    let renderer = createRenderer(canvas, host)
+    let raf = 0
+    let visible = true
+
+    const frame = (ms: number) => {
+      raf = 0
+      if (!renderer || renderer.isLost()) return
+      renderer.draw(seed + (reduce.matches ? 0 : ms * 0.001))
+      canvas.setAttribute('data-ready', '')
+      // reduced-motion：画一帧就停，画面仍在，只是不动
+      if (!reduce.matches && visible) raf = requestAnimationFrame(frame)
+    }
+
+    // 每次重排帧都要覆盖同一个句柄，否则会留下两条循环同时驱动一个上下文
+    const kick = () => {
+      cancelAnimationFrame(raf)
+      raf = requestAnimationFrame(frame)
+    }
+
+    const stop = () => {
+      cancelAnimationFrame(raf)
+      raf = 0
+    }
+
+    // 静止时（reduced-motion、或已滚出视口）没有下一帧，改变了什么就得手动补一帧
+    const redrawIfIdle = () => {
+      if (reduce.matches || !visible) kick()
+    }
+
+    // 上下文丢失（GPU 休眠、驱动重置、标签页回收）必须 preventDefault，
+    // 否则浏览器不会补发 restored 事件，场就此死掉且无从恢复 —— 而它是
+    // 整个方向的承重件。丢失期间交回 CSS 回退层，不留空白。
+    canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault()
+      stop()
+      renderer = null
+      canvas.removeAttribute('data-ready')
+    })
+
+    canvas.addEventListener('webglcontextrestored', () => {
+      renderer = createRenderer(canvas, host)
+      kick()
+    })
+
+    // 离开视口就停算，别为看不见的像素耗电
+    new IntersectionObserver(
+      ([e]) => {
+        visible = e.isIntersecting
+        if (visible && !reduce.matches) kick()
+        else stop()
+      },
+      { threshold: 0 },
+    ).observe(host)
+
+    document.addEventListener('themechange', () => {
+      if (!renderer || renderer.isLost()) return
+      renderer.syncVoid()
+      redrawIfIdle()
+    })
+
+    window.addEventListener('resize', redrawIfIdle, { passive: true })
+
+    kick()
+  }
+
+  document.querySelectorAll<HTMLElement>('[data-field]').forEach(boot)
+</script>

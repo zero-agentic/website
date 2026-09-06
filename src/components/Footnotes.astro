@@ -1,0 +1,29 @@
+---
+import type { IFootnote } from '../content/site/types'
+
+interface Props {
+  notes: IFootnote[]
+  refPrefix?: string
+  class?: string
+}
+
+const { notes, refPrefix = 'fn', class: className } = Astro.props
+---
+
+{
+  notes.length > 0 && (
+    <aside class:list={['mt-14 border-t border-line pt-6', className]}>
+      <ol class="m-0 list-none space-y-2.5 p-0">
+        {notes.map((note) => (
+          <li
+            id={`${refPrefix}-${note.n}`}
+            class="flex gap-3 text-[0.8125rem] leading-relaxed text-fg-3 transition-colors duration-300 target:text-fg"
+          >
+            <span class="shrink-0 pt-px font-semibold text-brand-2-ink tabular">{note.n}</span>
+            <span class="max-w-[70ch]">{note.text}</span>
+          </li>
+        ))}
+      </ol>
+    </aside>
+  )
+}

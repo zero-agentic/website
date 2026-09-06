@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro'
+import BlogIndexPage from '../../../components/pages/BlogIndexPage.astro'
+import { getSiteContent } from '../../../content/site'
+
+const locale = 'zh' as const
+const c = getSiteContent(locale)
+---
+
+<BaseLayout
+  locale={locale}
+  title={c.blog.title}
+  description={c.blog.description}
+  schemaType="CollectionPage"
+  breadcrumbs={[
+    { name: '首页', path: '/' },
+    { name: c.blog.heading, path: '/blog' },
+  ]}
+>
+  <BlogIndexPage locale={locale} />
+</BaseLayout>

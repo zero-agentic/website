@@ -1,0 +1,216 @@
+---
+import { getSiteContent } from '../content/site'
+import type { Locale } from '../content/site/types'
+import { localizePath, normalizePath } from '../i18n/routing'
+import Wordmark from './Wordmark.astro'
+import ThemeToggle from './ThemeToggle.astro'
+
+interface Props {
+  locale: Locale
+  altPath: string
+}
+
+const { locale, altPath } = Astro.props
+const c = getSiteContent(locale)
+const home = localizePath('/', locale)
+const contactHref = localizePath('/contact', locale)
+const current = normalizePath(Astro.url.pathname)
+
+const isActive = (href: string) => normalizePath(href) === current
+
+const menuLabel = locale === 'zh' ? '菜单' : 'Menu'
+---
+
+<header data-nav class="fixed inset-x-0 top-0 z-40">
+  <nav
+    class="shell flex items-center gap-4 py-4 sm:gap-6"
+    aria-label={locale === 'zh' ? '主导航' : 'Primary'}
+  >
+    <a
+      href={home}
+      class="flex shrink-0 items-center gap-2.5 no-underline"
+      aria-label="Zero Agentic"
+    >
+      <Wordmark class="h-7 w-7" />
+      <span
+        class="whitespace-nowrap font-display text-[1.0625rem] font-semibold tracking-[-0.035em] text-fg"
+      >
+        Zero Agentic
+      </span>
+    </a>
+
+    <ul class="m-0 ml-auto hidden list-none items-center gap-6 p-0 sm:flex">
+      {
+        c.nav.items.map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'whitespace-nowrap text-[0.875rem] font-medium no-underline transition-colors duration-200',
+                isActive(item.href) ? 'text-fg' : 'text-fg-2 hover:text-fg',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <div class="ml-auto flex shrink-0 items-center gap-2 sm:ml-0 sm:gap-3">
+      <a
+        href={altPath}
+        hreflang={locale === 'en' ? 'zh-CN' : 'en-US'}
+        class="grid h-9 place-items-center whitespace-nowrap rounded-full border border-line px-3 text-[0.75rem] font-semibold text-fg-2 no-underline transition-colors duration-200 hover:border-line-strong hover:text-fg"
+      >
+        {c.nav.langLabel}
+      </a>
+
+      <ThemeToggle locale={locale} />
+
+      <a href={contactHref} class="btn btn-solid hidden !px-5 !py-2 !text-[0.875rem] sm:inline-flex">
+        {c.nav.contactLabel}
+      </a>
+
+      <button
+        type="button"
+        data-menu-btn
+        aria-expanded="false"
+        aria-controls="nav-menu"
+        aria-label={menuLabel}
+        class="grid h-9 w-9 place-items-center rounded-full border border-line text-fg-2 transition-colors duration-200 hover:border-line-strong hover:text-fg sm:hidden"
+      >
+        <svg
+          class="h-[18px] w-[18px]"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.6"
+          stroke-linecap="round"
+          aria-hidden="true"
+        >
+          <path class="menu-line menu-line--top" d="M4 8h16"></path>
+          <path class="menu-line menu-line--bottom" d="M4 16h16"></path>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <div id="nav-menu" data-menu-panel hidden class="sm:hidden">
+    <ul class="shell m-0 list-none space-y-1 border-t border-line py-4 pb-6">
+      {
+        [...c.nav.items, { label: c.nav.contactLabel, href: contactHref }].map((item) => (
+          <li>
+            <a
+              href={item.href}
+              aria-current={isActive(item.href) ? 'page' : undefined}
+              class:list={[
+                'block py-2.5 font-display text-[1.5rem] font-medium tracking-[-0.03em] no-underline transition-colors duration-200',
+                isActive(item.href) ? 'text-fg' : 'text-fg-2',
+              ]}
+            >
+              {item.label}
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</header>
+
+<style>
+  /* 默认：页头没有任何自己的背景，场从页面最顶端连续下来。
+     导航文字所需的压暗由各区段 veil 的顶端承担 —— 那是一条连续的渐变，
+     不会在页头位置形成一块看得见的独立底色。 */
+
+  /* 滚动离开首屏、或小屏菜单展开时，才落下实底与分界线 */
+  [data-nav]::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--bg);
+    border-bottom: 1px solid var(--line);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    pointer-events: none;
+  }
+
+  [data-nav][data-stuck]::after,
+  [data-nav][data-open]::after {
+    opacity: 1;
+  }
+
+  [data-nav] nav,
+  [data-menu-panel] {
+    position: relative;
+    /* 两层伪元素背景都在 z-index auto，内容必须抬到它们之上 */
+    z-index: 1;
+  }
+
+  [data-menu-panel] {
+    background: var(--bg);
+  }
+
+  /* 菜单图标：两条线在展开时合成叉 */
+  .menu-line {
+    transform-origin: center;
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [aria-expanded='true'] .menu-line--top {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  [aria-expanded='true'] .menu-line--bottom {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+</style>
+
+<script>
+  const nav = document.querySelector<HTMLElement>('[data-nav]')
+  const btn = document.querySelector<HTMLButtonElement>('[data-menu-btn]')
+  const panel = document.querySelector<HTMLElement>('[data-menu-panel]')
+
+  if (nav && btn && panel) {
+    const setOpen = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open))
+      panel.hidden = !open
+      if (open) nav.dataset.open = ''
+      else delete nav.dataset.open
+    }
+
+    btn.addEventListener('click', () => setOpen(btn.getAttribute('aria-expanded') !== 'true'))
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') {
+        setOpen(false)
+        btn.focus()
+      }
+    })
+
+    // 视口变宽到桌面断点时收起，避免面板卡在展开态
+    const mq = window.matchMedia('(min-width: 640px)')
+    mq.addEventListener('change', (e) => {
+      if (e.matches) setOpen(false)
+    })
+  }
+
+  // 页头只在离开首屏顶部后才落下实底 —— 首屏保持场的完整。
+  // 哨兵必须有高度：1px 的哨兵配上负 rootMargin 永远不会相交，
+  // 那样 data-stuck 会恒为真，透明态形同虚设。
+  if (nav) {
+    const sentinel = document.createElement('div')
+    sentinel.setAttribute('aria-hidden', 'true')
+    sentinel.style.cssText =
+      'position:absolute;top:0;left:0;height:72px;width:1px;pointer-events:none;visibility:hidden'
+    document.body.prepend(sentinel)
+    new IntersectionObserver(
+      ([e]) => {
+        if (e.isIntersecting) delete nav.dataset.stuck
+        else nav.dataset.stuck = ''
+      },
+      { threshold: 0 },
+    ).observe(sentinel)
+  }
+</script>

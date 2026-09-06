@@ -1,0 +1,58 @@
+---
+import { getSiteContent } from '../content/site'
+import type { Locale } from '../content/site/types'
+import Wordmark from './Wordmark.astro'
+
+interface Props {
+  locale: Locale
+}
+
+const { locale } = Astro.props
+const c = getSiteContent(locale)
+const year = new Date().getFullYear()
+---
+
+<footer class="mt-28 border-t border-line bg-bg-sink">
+  <div class="shell py-14">
+    <div class="grid gap-10 sm:grid-cols-2 lg:grid-cols-4">
+      <div>
+        <div class="flex items-center gap-2.5">
+          <Wordmark class="h-7 w-7" />
+          <span class="font-display text-[1.0625rem] font-semibold tracking-[-0.035em] text-fg">
+            Zero Agentic
+          </span>
+        </div>
+        <p class="mt-4 mb-0 max-w-[34ch] text-[0.875rem] leading-relaxed text-fg-3">
+          {c.meta.defaultDescription}
+        </p>
+      </div>
+
+      {
+        c.footer.columns.map((col) => (
+          <nav aria-label={col.label}>
+            {/* nav 已有 aria-label —— 页脚分组不属于文档大纲，不用 heading */}
+            <p class="label m-0">{col.label}</p>
+            <ul class="m-0 mt-4 list-none space-y-2.5 p-0">
+              {col.items.map((item) => (
+                <li>
+                  <a
+                    href={item.href}
+                    class="text-[0.9375rem] text-fg-2 no-underline transition-colors duration-200 hover:text-fg"
+                  >
+                    {item.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))
+      }
+    </div>
+
+    <div
+      class="mt-14 flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 border-t border-line pt-6"
+    >
+      <p class="m-0 text-[0.8125rem] text-fg-3">© {year} {c.footer.rights}</p>
+    </div>
+  </div>
+</footer>

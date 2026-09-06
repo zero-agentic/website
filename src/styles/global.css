@@ -1,0 +1,537 @@
+@import 'tailwindcss';
+
+@import '@fontsource-variable/bricolage-grotesque';
+@import '@fontsource-variable/manrope';
+
+/* 品牌四色。标识那四颗球的取色，三档一组：高光 / 本色 / 暗面。
+   装饰用色不随主题变，只有压在背景上的文字色（-ink）需要各自的对比度。
+   全站唯一的色源 —— 标识、色点、场的着色器都从这里取。 */
+:root {
+  --brand-1: #f9861f;
+  --brand-1-lit: #ffb569;
+  --brand-1-dim: #ee7a16;
+
+  --brand-2: #33adec;
+  --brand-2-lit: #7cd0f7;
+  --brand-2-dim: #2497dc;
+
+  --brand-3: #ae87ef;
+  --brand-3-lit: #d5bef9;
+  --brand-3-dim: #9c74e4;
+
+  --brand-4: #e692ba;
+  --brand-4-lit: #f5bdd6;
+  --brand-4-dim: #d77fa9;
+
+  /* 压在品牌色块上的文字 */
+  --on-brand: #05050c;
+}
+
+/* 深色是默认（标识本来就是为深底设计的），浅色为可切换的对等实现 */
+:root,
+[data-theme='dark'] {
+  --bg: #05050c;
+  --bg-lift: #0b0b16;
+  --bg-sink: #030308;
+
+  --fg: #f4f2ee;
+  --fg-2: #b9b6ae;
+  --fg-3: #8a877f;
+
+  --line: rgba(244, 242, 238, 0.13);
+  --line-strong: rgba(244, 242, 238, 0.26);
+
+  /* 亮色压在深底上对比度足够（7:1 以上），文字直接用本色 */
+  --brand-1-ink: var(--brand-1);
+  --brand-2-ink: var(--brand-2);
+  --brand-3-ink: var(--brand-3);
+  --brand-4-ink: var(--brand-4);
+
+  --field-opacity: 1;
+  color-scheme: dark;
+}
+
+[data-theme='light'] {
+  --bg: #f7f5f1;
+  --bg-lift: #ffffff;
+  --bg-sink: #efece6;
+
+  --fg: #0d0d14;
+  --fg-2: #4d4a44;
+  --fg-3: #68645c;
+
+  --line: rgba(13, 13, 20, 0.12);
+  --line-strong: rgba(13, 13, 20, 0.26);
+
+  /* 大色块不承载文字，装饰仍用本色；文字改用深化版以过 AA */
+  --brand-1-ink: #a85200;
+  --brand-2-ink: #0a6e9e;
+  --brand-3-ink: #6d3fc4;
+  --brand-4-ink: #a83a70;
+
+  /* 浅色模式下场仍要有色，只是把亮度让给正文 */
+  --field-opacity: 0.82;
+  color-scheme: light;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-bg-lift: var(--bg-lift);
+  --color-bg-sink: var(--bg-sink);
+  --color-fg: var(--fg);
+  --color-fg-2: var(--fg-2);
+  --color-fg-3: var(--fg-3);
+  --color-line: var(--line);
+  --color-line-strong: var(--line-strong);
+
+  --color-brand-1: var(--brand-1);
+  --color-brand-2: var(--brand-2);
+  --color-brand-3: var(--brand-3);
+  --color-brand-4: var(--brand-4);
+  --color-brand-1-ink: var(--brand-1-ink);
+  --color-brand-2-ink: var(--brand-2-ink);
+  --color-brand-3-ink: var(--brand-3-ink);
+  --color-brand-4-ink: var(--brand-4-ink);
+  --color-on-brand: var(--on-brand);
+
+  /* Bricolage Grotesque 带宽度轴与光学尺寸轴，标题靠它做粗细与宽窄的对比 */
+  --font-display: 'Bricolage Grotesque Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-sans: 'Manrope Variable', ui-sans-serif, system-ui, sans-serif;
+  --font-cjk: 'Manrope Variable', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    'Noto Sans SC', sans-serif;
+
+  --shell-max: 84rem;
+  --shell-pad: 1.5rem;
+}
+
+/* ==========================================================================
+   基础
+   ========================================================================== */
+
+@layer base {
+  html {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    scroll-behavior: smooth;
+    /* 主题切换时整页过渡，避免生硬跳变 */
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  html:lang(zh) {
+    font-family: var(--font-cjk);
+  }
+
+  /* 首次上色由 head 里的同步脚本完成，那一帧不参与过渡 */
+  html[data-theme-boot] {
+    transition: none;
+  }
+
+  body {
+    margin: 0;
+    min-height: 100dvh;
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+      transition: none;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--font-display);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  html:lang(zh) :is(h1, h2, h3, h4) {
+    letter-spacing: 0;
+  }
+
+  p {
+    text-wrap: pretty;
+  }
+
+  /* --- 浏览器自带表面也归入设计系统 ----------------------------------- */
+  ::selection {
+    background-color: var(--brand-3);
+    color: var(--on-brand);
+  }
+
+  html {
+    caret-color: var(--brand-2-ink);
+    scrollbar-color: var(--fg-3) var(--bg-sink);
+    scrollbar-width: thin;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--brand-2-ink);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  a {
+    color: inherit;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+  }
+
+  ::marker {
+    color: var(--fg-3);
+  }
+
+  table,
+  .tabular {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* ==========================================================================
+   世界的零件
+   ========================================================================== */
+
+@layer components {
+  .shell {
+    margin-inline: auto;
+    max-width: var(--shell-max);
+    padding-inline: var(--shell-pad);
+  }
+  @media (min-width: 640px) {
+    .shell {
+      --shell-pad: 2rem;
+    }
+  }
+  @media (min-width: 1024px) {
+    .shell {
+      --shell-pad: 3rem;
+    }
+  }
+
+  /* --- 大标题：靠宽度轴而不是靠颜色制造层次 --------------------------- */
+  .title-xl {
+    font-family: var(--font-display);
+    font-size: clamp(2.125rem, 5vw, 3.625rem);
+    line-height: 1.04;
+    letter-spacing: -0.038em;
+    font-weight: 500;
+    font-variation-settings: 'wdth' 92, 'opsz' 72;
+  }
+
+  .title-lg {
+    font-family: var(--font-display);
+    font-size: clamp(1.625rem, 3.1vw, 2.375rem);
+    line-height: 1.12;
+    letter-spacing: -0.032em;
+    font-weight: 500;
+    font-variation-settings: 'wdth' 94, 'opsz' 40;
+  }
+
+  .title-md {
+    font-family: var(--font-display);
+    font-size: clamp(1.1875rem, 1.6vw, 1.375rem);
+    line-height: 1.25;
+    letter-spacing: -0.024em;
+    font-weight: 600;
+  }
+
+  /* 中文字面率高于拉丁字母，同样 px 下视觉更重：整体降一档，字距放松。
+     -0.035em 是为拉丁字母调的，套在汉字上会挤成一团。 */
+  html:lang(zh) .title-xl {
+    font-size: clamp(1.75rem, 3.9vw, 2.75rem);
+    line-height: 1.3;
+    letter-spacing: -0.005em;
+  }
+
+  html:lang(zh) .title-lg {
+    font-size: clamp(1.4375rem, 2.5vw, 1.9375rem);
+    line-height: 1.35;
+    letter-spacing: 0;
+  }
+
+  html:lang(zh) .title-md {
+    font-size: clamp(1.0625rem, 1.35vw, 1.1875rem);
+    line-height: 1.5;
+    letter-spacing: 0;
+  }
+
+  /* 标题里的次要句：窄体轻字重，与主句拉开而不换颜色 */
+  .title-soft {
+    font-weight: 200;
+    font-variation-settings: 'wdth' 80, 'opsz' 96;
+    color: var(--fg-2);
+  }
+
+  /* --- 小标签。只做区段名，绝不叠在标题正上方当 kicker -------------- */
+  .label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--fg-3);
+  }
+
+  html:lang(zh) .label {
+    letter-spacing: 0.05em;
+  }
+
+  /* --- 状态标记 -------------------------------------------------------- */
+  .chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--fg-2);
+    white-space: nowrap;
+  }
+
+  .chip::before {
+    content: '';
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--brand-1);
+    animation: chip-pulse 2.8s ease-out infinite;
+  }
+
+  @keyframes chip-pulse {
+    0% {
+      box-shadow: 0 0 0 0 color-mix(in srgb, var(--brand-1) 55%, transparent);
+    }
+    70% {
+      box-shadow: 0 0 0 10px transparent;
+    }
+    100% {
+      box-shadow: 0 0 0 0 transparent;
+    }
+  }
+
+  /* --- 待确认事实。诚实优先于美观，但不再是校对红的补丁 -------------- */
+  .tbd {
+    font-weight: 600;
+    color: var(--brand-1-ink);
+    text-decoration: underline dotted 1.5px;
+    text-underline-offset: 0.28em;
+    cursor: help;
+  }
+
+  /* --- 按钮 ------------------------------------------------------------ */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    padding: 0.8rem 1.6rem;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    text-decoration: none;
+    white-space: nowrap;
+    transition:
+      transform 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+      background-color 0.24s,
+      border-color 0.24s,
+      color 0.24s;
+  }
+
+  .btn:hover {
+    transform: translateY(-2px);
+  }
+
+  .btn-solid {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  .btn-outline {
+    border: 1px solid var(--line-strong);
+    color: var(--fg);
+  }
+
+  .btn-outline:hover {
+    border-color: var(--fg);
+  }
+
+  /* --- 条目行：内容的默认容器。不是卡片，是被规则线分隔的行 ---------- */
+  .row {
+    border-top: 1px solid var(--line);
+    padding-block: 2.25rem;
+  }
+
+  .row:last-child {
+    border-bottom: 1px solid var(--line);
+  }
+
+  /* --- 品牌色球：标识那四颗球的通用形态。色号由 data-tone 选，尺寸由用处给 --- */
+  .bead {
+    display: block;
+    width: var(--bead-size, 26px);
+    height: var(--bead-size, 26px);
+    border-radius: 50%;
+    flex: none;
+    background: radial-gradient(circle at 34% 28%, var(--bead-lit), var(--bead) 72%, var(--bead-dim));
+    box-shadow: 0 0 22px -6px var(--bead);
+  }
+
+  .bead[data-tone='1'] {
+    --bead: var(--brand-1);
+    --bead-lit: var(--brand-1-lit);
+    --bead-dim: var(--brand-1-dim);
+  }
+
+  .bead[data-tone='2'] {
+    --bead: var(--brand-2);
+    --bead-lit: var(--brand-2-lit);
+    --bead-dim: var(--brand-2-dim);
+  }
+
+  .bead[data-tone='3'] {
+    --bead: var(--brand-3);
+    --bead-lit: var(--brand-3-lit);
+    --bead-dim: var(--brand-3-dim);
+  }
+
+  .bead[data-tone='4'] {
+    --bead: var(--brand-4);
+    --bead-lit: var(--brand-4-lit);
+    --bead-dim: var(--brand-4-dim);
+  }
+
+  /* 缩到与小号文字齐平，辉光同步收窄 */
+  .bead--sm {
+    --bead-size: 10px;
+    box-shadow: 0 0 12px -3px var(--bead);
+    transform: translateY(1px);
+  }
+
+  /* --- Markdown 正文 --------------------------------------------------- */
+  .prose {
+    max-width: 68ch;
+    color: var(--fg-2);
+    font-size: 1.0625rem;
+    line-height: 1.75;
+  }
+
+  .prose > * + * {
+    margin-top: 1.4em;
+  }
+
+  .prose h2,
+  .prose h3 {
+    color: var(--fg);
+    margin-top: 2.4em;
+    margin-bottom: 0;
+  }
+
+  .prose h2 {
+    font-size: 1.6rem;
+  }
+
+  .prose h3 {
+    font-size: 1.25rem;
+  }
+
+  .prose h2 + *,
+  .prose h3 + * {
+    margin-top: 0.85em;
+  }
+
+  .prose strong {
+    color: var(--fg);
+    font-weight: 600;
+  }
+
+  .prose a {
+    color: var(--brand-2-ink);
+    text-decoration-thickness: 1.5px;
+  }
+
+  .prose a:hover {
+    color: var(--fg);
+  }
+
+  .prose ul,
+  .prose ol {
+    padding-left: 1.4rem;
+  }
+
+  .prose li + li {
+    margin-top: 0.45em;
+  }
+
+  .prose blockquote {
+    margin-inline: 0;
+    padding-left: 1.35rem;
+    border-left: 2px solid var(--brand-3);
+    color: var(--fg);
+  }
+
+  .prose code {
+    font-family: ui-monospace, 'SF Mono', monospace;
+    font-size: 0.875em;
+    background: var(--bg-lift);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 0.12em 0.4em;
+  }
+
+  .prose pre {
+    background: var(--bg-lift);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 1.15rem 1.35rem;
+    overflow-x: auto;
+    font-size: 0.875rem;
+    line-height: 1.7;
+  }
+
+  .prose pre code {
+    background: none;
+    border: 0;
+    padding: 0;
+  }
+
+  .prose hr {
+    border: 0;
+    border-top: 1px solid var(--line);
+  }
+}
+
+/* ==========================================================================
+   动作：一处编排过的入场 —— 内容从场里浮出
+   ========================================================================== */
+
+@layer utilities {
+  @keyframes surface {
+    from {
+      opacity: 0;
+      transform: translateY(1.25rem);
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  .surface {
+    animation: surface 0.85s cubic-bezier(0.16, 1, 0.3, 1) backwards;
+  }
+}

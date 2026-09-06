@@ -1,0 +1,50 @@
+---
+interface Props {
+  class?: string
+}
+
+const { class: className } = Astro.props
+
+// 本组件一页渲染多次（页头、页脚），渐变 id 必须各自唯一 ——
+// 硬编码会在文档里产生重复 id
+const uid = `wm-${Math.random().toString(36).slice(2, 8)}`
+---
+
+{/*
+  公司标识：四颗交叠的渐变球。球心距小于直径，这是原稿的形状，不是四颗并排的点。
+  色从 CSS 变量取，与站内色点、场是同一套。
+*/}
+<svg
+  viewBox="0 0 32 32"
+  fill="none"
+  aria-hidden="true"
+  class={className}
+  xmlns="http://www.w3.org/2000/svg"
+>
+  <defs>
+    <radialGradient id={`${uid}-1`} cx="0.36" cy="0.28" r="0.9">
+      <stop offset="0" stop-color="var(--brand-1-lit)"></stop>
+      <stop offset="0.5" stop-color="var(--brand-1)"></stop>
+      <stop offset="1" stop-color="var(--brand-1-dim)"></stop>
+    </radialGradient>
+    <radialGradient id={`${uid}-2`} cx="0.36" cy="0.28" r="0.9">
+      <stop offset="0" stop-color="var(--brand-2-lit)"></stop>
+      <stop offset="0.5" stop-color="var(--brand-2)"></stop>
+      <stop offset="1" stop-color="var(--brand-2-dim)"></stop>
+    </radialGradient>
+    <radialGradient id={`${uid}-3`} cx="0.36" cy="0.28" r="0.9">
+      <stop offset="0" stop-color="var(--brand-3-lit)"></stop>
+      <stop offset="0.5" stop-color="var(--brand-3)"></stop>
+      <stop offset="1" stop-color="var(--brand-3-dim)"></stop>
+    </radialGradient>
+    <radialGradient id={`${uid}-4`} cx="0.36" cy="0.28" r="0.9">
+      <stop offset="0" stop-color="var(--brand-4-lit)"></stop>
+      <stop offset="0.5" stop-color="var(--brand-4)"></stop>
+      <stop offset="1" stop-color="var(--brand-4-dim)"></stop>
+    </radialGradient>
+  </defs>
+  <circle cx="10.2" cy="10.2" r="7" fill={`url(#${uid}-1)`}></circle>
+  <circle cx="21.8" cy="10.2" r="7" fill={`url(#${uid}-2)`}></circle>
+  <circle cx="10.2" cy="21.8" r="7" fill={`url(#${uid}-3)`}></circle>
+  <circle cx="21.8" cy="21.8" r="7" fill={`url(#${uid}-4)`}></circle>
+</svg>
