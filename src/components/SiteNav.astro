@@ -13,7 +13,7 @@ interface Props {
 const { locale, altPath } = Astro.props
 const c = getSiteContent(locale)
 const home = localizePath('/', locale)
-const contactHref = localizePath('/contact', locale)
+const contactHref = `${localizePath('/about', locale)}#contact`
 const current = normalizePath(Astro.url.pathname)
 
 const isActive = (href: string) => normalizePath(href) === current

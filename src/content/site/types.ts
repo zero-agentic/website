@@ -79,30 +79,21 @@ export interface ISiteContent {
     contactCta: string
     sections: {
       capabilities: {
-        n: string
         title: string
         intro: string
         items: ICapability[]
       }
       products: {
-        n: string
         title: string
         intro: string
         entry: IProductEntry
         readMore: string
-      }
-      contact: {
-        n: string
-        title: string
-        intro: string
-        cta: string
       }
     }
   }
   products: {
     title: string
     description: string
-    n: string
     heading: string
     intro: string
     entry: IProductEntry
@@ -114,30 +105,21 @@ export interface ISiteContent {
   about: {
     title: string
     description: string
-    n: string
     heading: string
     statement: string[]
-    principlesLabel: string
-    principles: { title: string; body: string }[]
+    servicesLabel: string
+    services: { title: string; body: string }[]
     factsLabel: string
     facts: ISpecRow[]
-    footnotes: IFootnote[]
-  }
-  contact: {
-    title: string
-    description: string
-    n: string
-    heading: string
-    intro: string
-    email: string
-    channelsLabel: string
-    channels: { label: string; detail: string; email: string }[]
-    footnotes: IFootnote[]
+    contact: {
+      heading: string
+      body: string
+      email: string
+    }
   }
   blog: {
     title: string
     description: string
-    n: string
     heading: string
     intro: string
     empty: string
@@ -156,8 +138,6 @@ export interface ISiteContent {
 }
 
 export interface ILegalDoc {
-  /** 文档在全站章节体系中的编号，联系页的交叉引用指向它 */
-  n: string
   title: string
   description: string
   heading: string

@@ -42,7 +42,7 @@ Zero Agentic LLC 的对外身份门户。它要回答三个问题：这家公司
 - 首页
 - 产品（Products）
 - 关于（About）
-- 联系（Contact）
+- 关于与联系（About，联系方式合并在该页）
 - 隐私政策（Privacy Policy）
 - 服务条款（Terms of Service）
 - 博客 / 更新日志（Blog）

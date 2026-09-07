@@ -11,7 +11,7 @@ Zero Agentic 官网建站过程笔记。记录偏离计划的决定与待用户�
 | 技术栈 | Astro + Tailwind，静态构建 |
 | 部署 | GitHub Pages，仓库 `zero-agentic/website`，自定义域名 `zero-agentic.com` |
 | 语言 | 英文为主（`/`）+ 中文（`/zh`） |
-| 页面 | 首页、产品、关于、联系、隐私政策、服务条款、博客 |
+| 页面 | 首页、产品、关于（含联系）、隐私政策、服务条款、博客 |
 | 产品线署名 | **仅 DesignDance**，状态为「开发中，尚未上线」 |
 | 视觉方向 | **LATENT FIELD** —— 实时演算的潜空间场（重构后。首版 SPEC SHEET 已作废） |
 | 明暗 | 完整切换，深色为默认 |
@@ -115,7 +115,7 @@ Zero Agentic 官网建站过程笔记。记录偏离计划的决定与待用户�
 | `trailingSlash: 'never'` 与默认的 `format: 'directory'` **不一致**，GitHub Pages 上每条站内链接吃一次 301，canonical 指向立刻重定向的 URL | 改为 `trailingSlash: 'always'` + `format: 'directory'`；`localizePath` 输出尾斜杠，新增 `normalizePath` 供当前页判定；内容层 href 同步。（先试过 `format: 'file'`，Astro 会把 `/zh` 重写成不存在的 `/zh/index.html`，遂放弃） |
 | 法务稿缺 EU AI Act 第 50 条、CCPA 不出售声明、泄露通知、GDPR 第 13 条要素、DMCA 代理人、争议解决与一般条款 | 隐私政策扩至 17 条、服务条款扩至 16 条，中英同步。仍为工程稿 |
 | `礼制肖像` 不是中文词（礼制指社会礼法制度） | 改为 `礼服肖像` |
-| 联系邮箱作为确定事实渲染在 7 处，而站内其他 9 项未确认事实都是 TBD | **未转为 TBD**：联系页与两份法务文档的数据请求条款都指向它，写成 TBD 会让这些页面失去功能。改为集中到 `contact-email.ts` 单一常量并注明未确认，同时列为交付清单第一项交用户决定 |
+| 联系邮箱作为确定事实渲染在 7 处，而站内其他 9 项未确认事实都是 TBD | **未转为 TBD**：联系页与两份法务文档的数据请求条款都指向它，写成 TBD 会让这些页面失去功能。改为集中到 `company-info.ts` 单一常量并注明未确认，同时列为交付清单第一项交用户决定 |
 
 同轮处理的次要项：移除粘性页头的 `backdrop-blur`（与"纸不发光"的世界主张冲突）；Unicode 箭头换成 `Arrow.astro` 绘制 SVG；英文直引号转弯引号；小屏恢复联系入口；`TBD` 改用 `abbr` + 视觉隐藏说明，使读屏无需 hover 即可获知含义；博客文章在另一语言缺失时不再发 hreflang。
 
@@ -174,8 +174,8 @@ Zero Agentic 官网建站过程笔记。记录偏离计划的决定与待用户�
 
 以下均已在页面上以显式占位标记呈现，**未编造**：
 
-- 公司成立年份、注册州、办公地址
-- 联系邮箱（当前用 `hello@zero-agentic.com` 作占位，集中定义在 `src/content/site/contact-email.ts`）
+- 公司成立年份、注册州
+- 联系邮箱（当前使用 `hello@zero-agentic.com`，集中定义在 `src/content/site/company-info.ts`）
 - 社交 / GitHub 组织链接
 - 团队信息
 - 法务页中的司法管辖区、数据留存期限、争议解决条款
@@ -205,3 +205,11 @@ Zero Agentic 官网建站过程笔记。记录偏离计划的决定与待用户�
 - `pnpm build`：17 个页面生成成功。
 - 逐页解析 17 个 HTML：16 个可索引页面均有 canonical 与可解析 JSON-LD，页面实体 URL 与 canonical 一致；404 无 canonical、无 JSON-LD。
 - 中英文产品页分别包含 Product 与本地化 BreadcrumbList；中英文文章页分别包含 BlogPosting、发布日期与本地化面包屑。
+
+## 页面精简（2026-09-07）
+
+- 独立联系页的信息量不足以支撑单独路由，邮箱与联系事项合并到 About 页的 `#contact` 区段。
+- 删除 `/contact/`、`/zh/contact/` 及 `ContactPage`，不保留兼容路由。
+- 导航、首页、页脚与 404 页的联系入口统一指向 About 页联系区段。
+- 同页只展示一次联系邮箱；分类列表移除，适用事项收敛为一句说明。
+- 首页不再重复展示联系区段，只保留导航和首屏按钮作为入口。

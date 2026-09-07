@@ -1,7 +1,11 @@
 ---
 import '../styles/global.css'
 import { getSiteContent } from '../content/site'
-import { CONTACT_EMAIL } from '../content/site/contact-email'
+import {
+  COMPANY_ADDRESS,
+  COMPANY_NAME,
+  CONTACT_EMAIL,
+} from '../content/site/company-info'
 import type { Locale } from '../content/site/types'
 import { LOCALE_TAGS, alternatePath, stripLocale, localizePath } from '../i18n/routing'
 import SiteNav from '../components/SiteNav.astro'
@@ -12,7 +16,7 @@ interface Props {
   title: string
   description: string
   /** 当前页面最具体的 schema.org 页面类型 */
-  schemaType?: 'WebPage' | 'AboutPage' | 'ContactPage' | 'CollectionPage'
+  schemaType?: 'WebPage' | 'AboutPage' | 'CollectionPage'
   /** 页面描述的主要实体，例如产品页上的 Product */
   mainEntity?: Record<string, unknown>
   /** 博客正文的 Article 字段；存在时输出 BlogPosting */
@@ -61,7 +65,7 @@ const organizationJsonLd = {
   '@type': 'Organization',
   '@id': organizationId,
   name: c.meta.siteName,
-  legalName: 'Zero Agentic LLC',
+  legalName: COMPANY_NAME,
   url: siteUrl,
   logo: {
     '@type': 'ImageObject',
@@ -69,12 +73,21 @@ const organizationJsonLd = {
     width: 512,
     height: 512,
   },
-  description: c.meta.defaultDescription,
+  description: c.about.description,
   email: CONTACT_EMAIL,
+  address: {
+    '@type': 'PostalAddress',
+    ...COMPANY_ADDRESS,
+  },
   knowsAbout:
     locale === 'zh'
-      ? ['AI 图片生成', 'AI 视频生成', 'AI 设计生成']
-      : ['AI image generation', 'AI video generation', 'AI design generation'],
+      ? ['跨境电商', '数字营销', '订阅制 SaaS 工具', '海外业务运营']
+      : [
+          'Cross-border e-commerce',
+          'Digital marketing',
+          'Subscription SaaS tools',
+          'International business operations',
+        ],
 }
 
 const websiteJsonLd = {

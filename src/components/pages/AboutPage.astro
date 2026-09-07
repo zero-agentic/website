@@ -6,7 +6,6 @@ import PageHeader from '../PageHeader.astro'
 import Bead from '../Bead.astro'
 import SpecList from '../SpecList.astro'
 import SectionHeading from '../SectionHeading.astro'
-import Footnotes from '../Footnotes.astro'
 
 interface Props {
   locale: Locale
@@ -19,7 +18,7 @@ const a = c.about
 const TONES: BrandTone[] = [1, 2, 3, 4]
 ---
 
-<PageHeader n={a.n} heading={a.heading} />
+<PageHeader heading={a.heading} />
 
 <section class="shell">
   <div class="grid gap-x-12 gap-y-14 border-t border-line pt-14 lg:grid-cols-[1.25fr_1fr]">
@@ -44,22 +43,38 @@ const TONES: BrandTone[] = [1, 2, 3, 4]
   </div>
 </section>
 
-<section class="shell pt-24 sm:pt-32" id="principles">
-  <SectionHeading title={a.principlesLabel} class="max-w-[20ch]" />
+<section class="shell pt-24 sm:pt-32" id="services">
+  <SectionHeading title={a.servicesLabel} class="max-w-[20ch]" />
 
   <div class="mt-12">
     {
-      a.principles.map((pr, i) => (
+      a.services.map((service, i) => (
         <div class="row grid gap-x-12 gap-y-4 lg:grid-cols-[minmax(0,22rem)_1fr]">
           <div class="flex gap-5">
             <Bead tone={TONES[i % TONES.length]} class="mt-1" />
-            <h3 class="title-md">{pr.title}</h3>
+            <h3 class="title-md">{service.title}</h3>
           </div>
-          <p class="m-0 max-w-[62ch] text-[1rem] leading-[1.75] text-fg-2">{pr.body}</p>
+          <p class="m-0 max-w-[62ch] text-[1rem] leading-[1.75] text-fg-2">{service.body}</p>
         </div>
       ))
     }
   </div>
+</section>
 
-  <Footnotes notes={a.footnotes} refPrefix="afn" />
+<section class="shell pt-24 sm:pt-32" id="contact">
+  <div class="grid gap-x-12 gap-y-8 border-t border-line pt-14 lg:grid-cols-[1fr_1.25fr]">
+    <SectionHeading title={a.contact.heading} class="max-w-[20ch]" />
+
+    <div class="lg:pt-2">
+      <p class="m-0 max-w-[52ch] text-[1rem] leading-relaxed text-fg-2">{a.contact.body}</p>
+      <a
+        href={`mailto:${a.contact.email}`}
+        class="mt-6 block font-display text-[clamp(1.35rem,3vw,2rem)] font-medium leading-tight text-fg no-underline transition-colors duration-200 hover:text-brand-2-ink"
+      >
+        <span class="break-words underline decoration-brand-2 decoration-2 underline-offset-[0.3em]">
+          {a.contact.email}
+        </span>
+      </a>
+    </div>
+  </div>
 </section>

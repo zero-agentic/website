@@ -18,7 +18,7 @@ const c = getSiteContent(locale)
 const h = c.home
 const caps = h.sections.capabilities
 const prod = h.sections.products
-const contact = h.sections.contact
+const contactHref = `${localizePath('/about', locale)}#contact`
 
 /** 三条能力各认领一颗球。首屏索引与 01 节共用，同一条能力上下同色 */
 const TONES: BrandTone[] = [2, 3, 1]
@@ -46,7 +46,7 @@ const TONES: BrandTone[] = [2, 3, 1]
       class="surface mt-10 flex flex-wrap items-center gap-x-7 gap-y-4"
       style="animation-delay:180ms"
     >
-      <a href={localizePath('/contact', locale)} class="btn btn-solid group">
+      <a href={contactHref} class="btn btn-solid group">
         {h.contactCta}
         <Arrow class="transition-transform duration-300 group-hover:translate-x-1" />
       </a>
@@ -73,7 +73,7 @@ const TONES: BrandTone[] = [2, 3, 1]
 </section>
 
 <section class="shell pt-28 sm:pt-36">
-  <SectionHeading n={caps.n} title={caps.title} class="max-w-[20ch]" />
+  <SectionHeading title={caps.title} class="max-w-[20ch]" />
   <p class="mt-7 mb-14 max-w-[68ch] text-[1.0625rem] leading-relaxed text-fg-2">{caps.intro}</p>
 
   <div>
@@ -101,7 +101,7 @@ const TONES: BrandTone[] = [2, 3, 1]
   <LatentField variant="band" />
 
   <div class="shell">
-    <SectionHeading n={prod.n} title={prod.title} class="max-w-[20ch]" />
+    <SectionHeading title={prod.title} class="max-w-[20ch]" />
     <p class="mt-7 mb-14 max-w-[68ch] text-[1.0625rem] leading-relaxed text-fg-2">{prod.intro}</p>
 
     <article class="grid gap-x-12 gap-y-10 lg:grid-cols-[1.15fr_1fr]">
@@ -120,31 +120,5 @@ const TONES: BrandTone[] = [2, 3, 1]
 
       <SpecList locale={locale} rows={prod.entry.specs} class="lg:pt-2" />
     </article>
-  </div>
-</section>
-
-<section class="shell pt-28 sm:pt-36">
-  <SectionHeading n={contact.n} title={contact.title} class="max-w-[20ch]" />
-
-  <div class="mt-10 grid gap-x-12 gap-y-8 lg:grid-cols-[1.15fr_1fr]">
-    <p class="m-0 max-w-[52ch] text-[1.0625rem] leading-relaxed text-fg-2">{contact.intro}</p>
-
-    <div>
-      <a
-        href={`mailto:${c.contact.email}`}
-        class="block font-display text-[clamp(1.25rem,3vw,2rem)] font-medium tracking-[-0.035em] text-fg no-underline transition-colors duration-200 hover:text-brand-2-ink"
-      >
-        <span class="break-all underline decoration-brand-2 decoration-2 underline-offset-[0.3em]">
-          {c.contact.email}
-        </span>
-      </a>
-      <a
-        href={localizePath('/contact', locale)}
-        class="group mt-7 inline-flex items-center gap-2.5 text-[0.9375rem] font-medium text-fg-2 no-underline transition-colors duration-200 hover:text-fg"
-      >
-        {contact.cta}
-        <Arrow class="transition-transform duration-300 group-hover:translate-x-1" />
-      </a>
-    </div>
   </div>
 </section>

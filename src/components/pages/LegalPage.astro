@@ -12,7 +12,7 @@ const { doc } = Astro.props
 {/* 法务页是长文阅读面：不铺场，只留干净的底与最大的行宽舒适度 */}
 <article class="shell pb-20 pt-32 sm:pt-40">
   <header class="max-w-[70ch]">
-    <SectionHeading n={doc.n} title={doc.heading} as="h1" />
+    <SectionHeading title={doc.heading} as="h1" />
 
     <dl class="mt-7 mb-0 flex flex-wrap items-baseline gap-x-3 gap-y-1">
       <dt class="label m-0">{doc.effectiveLabel}</dt>

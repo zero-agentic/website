@@ -1,5 +1,5 @@
 import type { ISiteContent } from './types'
-import { CONTACT_EMAIL } from './contact-email'
+import { COMPANY_ADDRESS_TEXT, COMPANY_NAME, CONTACT_EMAIL } from './company-info'
 
 /**
  * 中文站内容。
@@ -21,7 +21,7 @@ export const zh: ISiteContent = {
   meta: {
     siteName: 'Zero Agentic',
     defaultDescription:
-      'Zero Agentic 是一家 AI 图片与视频生成公司，研发把生成内容转成可直接使用的设计文件的 AI 工具。',
+      'Zero Agentic LLC 主要从事跨境电商、数字营销、订阅制 SaaS 工具及海外业务运营。',
   },
 
   nav: {
@@ -57,10 +57,9 @@ export const zh: ISiteContent = {
 
     sections: {
       capabilities: {
-        n: '1',
         title: 'AI 图片与视频生成',
         intro:
-          '我们在做的三件事。都还在开发中，会随 02 的产品一起交付，目前不单独对外提供。',
+          '我们在做的三件事。都还在开发中，会随 DesignDance 一起交付，目前不单独对外提供。',
         items: [
           {
             name: '图像生成',
@@ -97,7 +96,6 @@ export const zh: ISiteContent = {
       },
 
       products: {
-        n: '2',
         title: '产品',
         intro:
           '我们只有一款产品，还没上线。所以这里没有试用按钮，也没有倒计时——上线日期我们还给不出一个能负责的答案。',
@@ -115,13 +113,6 @@ export const zh: ISiteContent = {
         },
         readMore: '看详细的',
       },
-
-      contact: {
-        n: '3',
-        title: '联系',
-        intro: '我们自己收信、自己回信。没有工单系统，中间没有人转接。',
-        cta: '所有联系方式',
-      },
     },
   },
 
@@ -129,7 +120,6 @@ export const zh: ISiteContent = {
     title: 'DesignDance AI 设计生成工具 | Zero Agentic',
     description:
       'DesignDance 是面向 Logo、应用图标、海报、游戏素材和老照片修复的 AI 设计生成工具，目前由 Zero Agentic 开发中。',
-    n: '2',
     heading: 'AI 设计生成工具',
     intro:
       'DesignDance 是 Zero Agentic 正在开发的 AI 设计生成工具，目前尚未开放使用。下面是计划覆盖的范围，不是已经可用的功能清单。',
@@ -188,86 +178,51 @@ export const zh: ISiteContent = {
   },
 
   about: {
-    title: '关于 Zero Agentic | AI 图片与视频生成公司',
+    title: '关于 Zero Agentic | 跨境数字业务公司',
     description:
-      'Zero Agentic LLC 是一家 AI 图片与视频生成公司，研发把生成内容转成可直接使用的设计文件的工具。',
-    n: '4',
+      '了解 Zero Agentic LLC 的跨境数字业务、公司信息及联系方式。',
     heading: '关于 Zero Agentic',
     statement: [
-      'Zero Agentic 是一家做 AI 图像与视频生成的公司。',
-      '我们切入的地方很窄也很具体。AI 现在很会画图，但它完全不管你能不能用。你要矢量，它给你像素；你要七个尺寸，它给你一个；你打算拿去印刷，它给你屏幕分辨率。难的地方早就不是把图画出来了——而是那张图之后，关于这个文件必须成立的所有事情。',
-      '我们还很早期。一款产品在建，暂时没有对外可用的东西。等有更多能负责任讲出来的事实，这一页会写得更长。',
+      'Zero Agentic LLC 是一家美国公司，主要从事跨境电商、数字营销、订阅制 SaaS 工具及海外业务运营。',
+      '我们开发和运营数字产品，并围绕其海外分销、客户获取和日常交付开展业务。',
+      '公司的美国商业账户用于支持上述经营活动，包括支付 SaaS 软件订阅、广告费用和供应商款项，以及接收海外业务收入。',
     ],
-    principlesLabel: '我们怎么做事',
-    principles: [
+    servicesLabel: '主要业务与服务',
+    services: [
       {
-        title: '交付能直接用的东西',
-        body: '我们衡量自己的标准，不是生成得多快、多好看，而是你拿到的东西能不能直接用在真实的地方——挂上招牌、上架商店、送去印刷。',
+        title: '跨境电商',
+        body: '面向不同国家和地区开展线上商业活动及相关运营。',
       },
       {
-        title: '把复杂留在我们这边',
-        body: '格式、尺寸、色彩、分辨率，这些本来就该由工具去处理。你只需要说清楚你想要什么。',
+        title: '数字营销',
+        body: '为海外业务开展数字营销策划、广告投放和线上客户获取。',
       },
       {
-        title: '创作者说了算',
-        body: 'AI 是放大创作能力的工具，不是替你做决定的东西。你做出来的东西归你，我们的职责是让它更容易被做成。',
+        title: '订阅制 SaaS 工具',
+        body: '开发和运营服务于数字化与创意工作流程的订阅制软件工具。',
       },
       {
-        title: '只说做得到的事',
-        body: '产品到哪一步就说到哪一步，承诺出去的都是已经成立的事实。这一条对客户和对投资人是同一套标准。',
+        title: '海外业务运营',
+        body: '协调跨市场经营所需的软件服务、供应商、付款及业务收入。',
       },
     ],
     factsLabel: '公司信息',
     facts: [
-      { label: '法定名称', value: 'Zero Agentic LLC' },
+      { label: '法定名称', value: COMPANY_NAME },
       { label: '实体类型', value: '有限责任公司' },
-      { label: '注册司法辖区', value: null },
-      { label: '成立时间', value: null },
-      { label: '注册地址', value: null },
-      { label: '团队规模', value: null },
+      { label: '公司地址', value: COMPANY_ADDRESS_TEXT },
       { label: '域名', value: 'zero-agentic.com', href: 'https://zero-agentic.com' },
     ],
-    footnotes: [],
-  },
-
-  contact: {
-    title: '联系 Zero Agentic | 合作、媒体与招聘',
-    description: '联系 Zero Agentic LLC，沟通 AI 生成合作、媒体采访、招聘、法务或隐私请求。',
-    n: '3',
-    heading: '联系 Zero Agentic',
-    intro:
-      '邮件是唯一的入口，而且直接到人。没有工单系统，没有客服挂件，中间没有人转接。',
-    email: CONTACT_EMAIL,
-    channelsLabel: '你可以来谈什么',
-    channels: [
-      {
-        label: '合作',
-        detail: '想做集成、分发，或者一起做点什么，直接说你的想法。',
-        email: CONTACT_EMAIL,
-      },
-      {
-        label: '媒体',
-        detail: '你是记者或分析师，需要资料、采访，或者核实一件事。',
-        email: CONTACT_EMAIL,
-      },
-      {
-        label: '招聘',
-        detail: '我们目前没有在招的岗位，但你写来的信会被读到。',
-        email: CONTACT_EMAIL,
-      },
-      {
-        label: '法务与隐私',
-        detail: '你要提数据请求，或者对隐私政策（05）、服务条款（06）有疑问。',
-        email: CONTACT_EMAIL,
-      },
-    ],
-    footnotes: [],
+    contact: {
+      heading: '联系我们',
+      body: '商务合作、媒体、招聘、法务或隐私相关事项，请发送邮件至：',
+      email: CONTACT_EMAIL,
+    },
   },
 
   blog: {
     title: 'AI 图片与视频生成笔记 | Zero Agentic',
     description: 'Zero Agentic 关于 AI 图片生成、AI 视频生成和可直接使用的设计文件的产品与工程笔记。',
-    n: '7',
     heading: 'AI 生成笔记',
     intro: '关于我们在做什么、为什么这么做的记录。有值得写下来的东西才写，不按周期更新。',
     empty: '暂无记录。',
@@ -278,7 +233,6 @@ export const zh: ISiteContent = {
 
   legal: {
     privacy: {
-      n: '5',
       title: '隐私政策 — Zero Agentic',
       description: 'Zero Agentic LLC 如何收集、使用与留存个人信息。',
       heading: '隐私政策',
@@ -409,7 +363,7 @@ export const zh: ISiteContent = {
           title: '控制者与联系方式',
           body: [
             'Zero Agentic LLC 是本政策所述个人信息的控制者。',
-            '我们的注册地址尚未在本站公布，在“关于”页的实体信息表中显示为 TBD。该地址会在本政策生效之前写明于此。',
+            `公司地址：${COMPANY_ADDRESS_TEXT}`,
             `一切隐私事宜的联系方式：${CONTACT_EMAIL}`,
           ],
         },
@@ -429,7 +383,6 @@ export const zh: ISiteContent = {
     },
 
     terms: {
-      n: '6',
       title: '服务条款 — Zero Agentic',
       description: '使用 Zero Agentic 网站与产品所适用的条款。',
       heading: '服务条款',
@@ -472,7 +425,7 @@ export const zh: ISiteContent = {
           body: [
             'AI 生成物的法律地位尚未定型，且因司法辖区而异。在美国，缺乏充分人类作者贡献的作品可能不具备著作权保护资格。',
             '我们会把我们有能力转让的、对生成产出的一切权利转让给您。但我们无法保证产出可受保护、不与既有作品构成相似，或使用产出不会侵犯第三方权利。',
-            '生成产出会按隐私政策 06 所述携带溯源标记。移除或伪造这些标记构成对本条款的违反。',
+            '生成产出会按隐私政策所述携带溯源标记。移除或伪造这些标记构成对本条款的违反。',
           ],
         },
         {
@@ -575,7 +528,7 @@ export const zh: ISiteContent = {
       {
         label: '联系',
         items: [
-          { label: '联系我们', href: '/zh/contact/' },
+          { label: '联系我们', href: '/zh/about/#contact' },
           { label: '笔记', href: '/zh/blog/' },
         ],
       },

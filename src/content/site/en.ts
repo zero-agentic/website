@@ -1,12 +1,12 @@
 import type { ISiteContent } from './types'
-import { CONTACT_EMAIL } from './contact-email'
+import { COMPANY_ADDRESS_TEXT, COMPANY_NAME, CONTACT_EMAIL } from './company-info'
 
 /**
  * 英文站内容。
  *
  * 硬规则：这里只写可核对的事实。公司成立年份、注册地、团队等尚未由业务方
  * 提供的事实一律写 null，渲染为 TBD 占位，绝不用行业套话填充。
- * 联系邮箱是唯一的例外，理由见 contact-email.ts。
+ * 联系邮箱是唯一的例外，理由见 company-info.ts。
  */
 export const en: ISiteContent = {
   locale: 'en',
@@ -22,7 +22,7 @@ export const en: ISiteContent = {
   meta: {
     siteName: 'Zero Agentic',
     defaultDescription:
-      'Zero Agentic is an AI image and video generation company building tools that turn generated media into production-ready design files.',
+      'Zero Agentic LLC works across cross-border e-commerce, digital marketing, subscription SaaS tools, and international business operations.',
   },
 
   nav: {
@@ -58,10 +58,9 @@ export const en: ISiteContent = {
 
     sections: {
       capabilities: {
-        n: '1',
         title: 'AI image and video generation',
         intro:
-          'Three things we are building. All of them are still in development and will arrive inside the product under 02 — none is sold separately today.',
+          'Three things we are building. All of them are still in development and will arrive inside DesignDance — none is sold separately today.',
         items: [
           {
             name: 'Image synthesis',
@@ -100,7 +99,6 @@ export const en: ISiteContent = {
       },
 
       products: {
-        n: '2',
         title: 'Products',
         intro:
           'We have one product and it is not out yet. So there is no trial button here and no countdown — we do not have a launch date we could stand behind.',
@@ -118,14 +116,6 @@ export const en: ISiteContent = {
         },
         readMore: 'See the details',
       },
-
-      contact: {
-        n: '3',
-        title: 'Contact',
-        intro:
-          'We read and answer our own mail. No ticket system, nobody in the middle.',
-        cta: 'All the ways to reach us',
-      },
     },
   },
 
@@ -133,7 +123,6 @@ export const en: ISiteContent = {
     title: 'DesignDance AI Design Generator | Zero Agentic',
     description:
       'DesignDance is an AI design generator for logos, app icons, posters, game assets and photo restoration. Currently in development at Zero Agentic.',
-    n: '2',
     heading: 'AI design generation',
     intro:
       'DesignDance is an AI design generator in development at Zero Agentic. It is not yet available. The scope below is planned, not a list of features that already work.',
@@ -198,88 +187,52 @@ export const en: ISiteContent = {
   },
 
   about: {
-    title: 'About Zero Agentic | AI Generation Company',
+    title: 'About Zero Agentic | Global Digital Business',
     description:
-      'Zero Agentic LLC is an AI image and video generation company building tools that turn generated media into usable design files.',
-    n: '4',
+      'Learn about Zero Agentic LLC, its cross-border digital business, company details, and how to get in touch.',
     heading: 'About Zero Agentic',
     statement: [
-      'Zero Agentic is a company building AI image and video generation.',
-      'The gap we work in is narrow and specific. AI has become very good at making a picture, and completely indifferent to whether you can use it. You needed vector and got pixels. You needed seven icon sizes and got one. You were going to print it and got something sized for a screen. The hard part is no longer making the image — it is everything that has to be true about the file afterwards.',
-      'We are early. One product is in development and nothing is public yet. This page will get longer as there is more we can honestly say.',
+      'Zero Agentic LLC is a US company working across cross-border e-commerce, digital marketing, subscription SaaS tools, and international business operations.',
+      'We develop and operate digital products and support their distribution, customer acquisition, and day-to-day delivery across international markets.',
+      'Our US business account supports these operations. We use it to pay SaaS subscriptions, advertising costs, and supplier invoices, and to receive revenue from overseas business activities.',
     ],
-    principlesLabel: 'How we work',
-    principles: [
+    servicesLabel: 'What we do',
+    services: [
       {
-        title: 'Deliver something you can use',
-        body: 'We do not measure ourselves by how fast or how striking the output is. We measure it by whether what you receive can go straight where it is needed — onto a sign, into a store, off to print.',
+        title: 'Cross-border e-commerce',
+        body: 'We operate online commerce activities for customers and markets across borders.',
       },
       {
-        title: 'Keep the complexity on our side',
-        body: 'Formats, sizes, colour, resolution — handling those is the tool’s job. Yours is to say what you want.',
+        title: 'Digital marketing',
+        body: 'We plan and operate digital campaigns, paid advertising, and online customer acquisition for international business.',
       },
       {
-        title: 'The creator decides',
-        body: 'AI is here to widen what you can make, not to make the choices for you. What you create is yours; our job is to make it easier to finish.',
+        title: 'Subscription SaaS tools',
+        body: 'We develop and operate subscription software for digital and creative workflows.',
       },
       {
-        title: 'Only claim what holds',
-        body: 'We say where the product actually stands and promise only what is already true. Customers and investors get the same account.',
+        title: 'International operations',
+        body: 'We coordinate the software services, suppliers, payments, and revenue flows needed to operate across markets.',
       },
     ],
     factsLabel: 'The company',
     facts: [
-      { label: 'Legal name', value: 'Zero Agentic LLC' },
+      { label: 'Legal name', value: COMPANY_NAME },
       { label: 'Entity type', value: 'Limited liability company' },
-      { label: 'Jurisdiction', value: null },
-      { label: 'Founded', value: null },
-      { label: 'Registered office', value: null },
-      { label: 'Team size', value: null },
+      { label: 'Business address', value: COMPANY_ADDRESS_TEXT },
       { label: 'Domain', value: 'zero-agentic.com', href: 'https://zero-agentic.com' },
     ],
-    footnotes: [],
-  },
-
-  contact: {
-    title: 'Contact Zero Agentic | Partnerships, Press & Careers',
-    description:
-      'Contact Zero Agentic LLC about AI generation partnerships, press enquiries, careers, legal matters or privacy requests.',
-    n: '3',
-    heading: 'Contact Zero Agentic',
-    intro:
-      'Email is the only way in, and it reaches a person directly. No ticket system, no chat widget, nobody in the middle.',
-    email: CONTACT_EMAIL,
-    channelsLabel: 'What you can write about',
-    channels: [
-      {
-        label: 'Partnerships',
-        detail: 'An integration, distribution, or building something together — tell us what you have in mind.',
-        email: CONTACT_EMAIL,
-      },
-      {
-        label: 'Press',
-        detail: "You're a journalist or analyst and need material, an interview, or a fact checked.",
-        email: CONTACT_EMAIL,
-      },
-      {
-        label: 'Careers',
-        detail: 'We have nothing posted right now, but the mail you send still gets read.',
-        email: CONTACT_EMAIL,
-      },
-      {
-        label: 'Legal and privacy',
-        detail: 'A data request, or anything you want to ask about the Privacy Policy (05) or Terms (06).',
-        email: CONTACT_EMAIL,
-      },
-    ],
-    footnotes: [],
+    contact: {
+      heading: 'Contact',
+      body: 'For partnerships, press, careers, legal, or privacy inquiries, email us at:',
+      email: CONTACT_EMAIL,
+    },
   },
 
   blog: {
     title: 'AI Image & Video Generation Notes | Zero Agentic',
     description:
       'Zero Agentic notes on AI image generation, AI video generation and turning generated media into production-ready design files.',
-    n: '7',
     heading: 'AI generation notes',
     intro:
       'Notes on what we are building and why. Posted when there is something worth writing down, not on a schedule.',
@@ -291,7 +244,6 @@ export const en: ISiteContent = {
 
   legal: {
     privacy: {
-      n: '5',
       title: 'Privacy Policy — Zero Agentic',
       description: 'How Zero Agentic LLC collects, uses, and retains personal information.',
       heading: 'Privacy Policy',
@@ -422,7 +374,7 @@ export const en: ISiteContent = {
           title: 'Controller and contact details',
           body: [
             'Zero Agentic LLC is the controller of the personal information described in this policy.',
-            'Our registered office address is not yet published on this site and appears as TBD on the About page. It will be stated here before this policy takes effect.',
+            `Business address: ${COMPANY_ADDRESS_TEXT}`,
             `Contact for all privacy matters: ${CONTACT_EMAIL}`,
           ],
         },
@@ -442,7 +394,6 @@ export const en: ISiteContent = {
     },
 
     terms: {
-      n: '6',
       title: 'Terms of Service — Zero Agentic',
       description: 'The terms governing use of the Zero Agentic website and products.',
       heading: 'Terms of Service',
@@ -487,7 +438,7 @@ export const en: ISiteContent = {
           body: [
             'The legal status of AI-generated material is unsettled and varies by jurisdiction. In the United States, works produced without sufficient human authorship may not be eligible for copyright protection.',
             'We will assign to you whatever rights in generated output we are able to assign. We cannot warrant that output is protectable, that it is free of resemblance to existing works, or that using it will not infringe a third party’s rights.',
-            'Generated output will carry provenance markings as described under 06 of the Privacy Policy. Removing or falsifying those markings is a breach of these terms.',
+            'Generated output will carry provenance markings as described in the Privacy Policy. Removing or falsifying those markings is a breach of these terms.',
           ],
         },
         {
@@ -590,7 +541,7 @@ export const en: ISiteContent = {
       {
         label: 'Contact',
         items: [
-          { label: 'Contact', href: '/contact/' },
+          { label: 'Contact', href: '/about/#contact' },
           { label: 'Notes', href: '/blog/' },
         ],
       },

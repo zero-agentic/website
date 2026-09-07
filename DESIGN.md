@@ -65,7 +65,7 @@
 | `SiteNav` | 页头。`fixed` 脱离文档流，默认**零背景**；滚动后落下实底；sm 以下收进汉堡菜单 |
 | `ThemeToggle` | 明暗切换。两枚图标常驻 DOM，靠 `data-theme` 决定可见性 |
 | `SpecList` | 规格列表。`dl > div > (dt,dd)` —— div 包裹是为了让分隔线连续 |
-| `SectionHeading` | 区段标题。编号与标题**同基线同行** |
+| `SectionHeading` | 区段标题。只保留标题本身，不附加装饰编号 |
 | `Footnotes` | 脚注区 |
 | `Wordmark` | 四颗渐变球标识 |
 | `Arrow` | 绘制的方向箭头 |
@@ -92,7 +92,7 @@ CSS 语汇在 `global.css` 的 `@layer components`：`.shell`、`.title-xl/lg/md
 ## 禁止事项
 
 - **不用卡片做页面结构。** 条目是被规则线分隔的行（`.row`），或自带边线的网格格子。
-- **不在标题上方加 kicker / eyebrow。** 编号与标题同行同基线。这是绝对禁令。
+- **不在标题上方加 kicker / eyebrow。** 标题独立承担层级。这是绝对禁令。
 - **不用渐变文字、玻璃拟态、backdrop-blur 装饰。**
 - **不用 emoji 或 Unicode 字形代替图标。** 图标是绘制的 SVG。
 - **不用 `.bead` 而不给 `display`。** 它是 span，inline 状态下宽高无效。
@@ -117,7 +117,7 @@ CSS 语汇在 `global.css` 的 `@layer components`：`.shell`、`.title-xl/lg/md
 - Lighthouse（桌面 navigation）：**深色与浅色各跑一次**，均为 Accessibility 100 / Best Practices 100 / SEO 100 / Agentic Browsing 100，52 项通过 0 失败
 - impeccable detector：零发现
 - `astro check`：0 errors / 0 warnings / 0 hints
-- 标题层级：17/17 页各恰好一个 `h1`
-- 内部链接：352 条 / 17 页，零失效，尾斜杠一致
+- 标题层级：每个生成页面各恰好一个 `h1`
+- 内部链接：全站零失效，尾斜杠一致
 - 中文页英文串残留：零
 - 移动端 390px：无横向溢出，导航收进汉堡菜单
