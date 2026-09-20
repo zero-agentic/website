@@ -26,7 +26,7 @@ Node 24+，pnpm 10+。
 | 路由 | 中文 | 页面 |
 | --- | --- | --- |
 | `/` | `/zh/` | 首页 |
-| `/products/` | `/zh/products/` | 产品（DesignDance 规格与计划范围） |
+| `/products/` | `/zh/products/` | 产品（Zero Kit 产品介绍） |
 | `/about/` | `/zh/about/` | 关于、公司信息与联系方式 |
 | `/privacy/` | `/zh/privacy/` | 隐私政策 |
 | `/terms/` | `/zh/terms/` | 服务条款 |
@@ -107,11 +107,10 @@ draft: false             # true 则不出现在构建产物中
 
 `astro.config.mjs` 中 `site` 已设为 `https://zero-agentic.com` 且**没有** `base`（自定义域名不需要）。改域名时同步改这两处。
 
-## 上线前必须处理
+## 内容红线
 
-见交付说明与 `implementation-notes.md` 的「待用户提供的真实事实」。简述：
-
-1. **确认联系邮箱** —— 全站使用 `hello@zero-agentic.com`，定义在 `src/content/site/company-info.ts`。About 页联系区段以及隐私政策与服务条款的数据请求条款都指向它。若该邮箱不存在，隐私政策向访客做出的法定数据请求承诺会指向一个收不到信的地址。
-2. **法务页须经执业律师审阅** —— `/privacy/` 与 `/terms/` 是对照真实数据流写的工程稿（隐私 17 条、条款 16 条），页面上有醒目的待审声明。涉及人脸照片的品类会触及伊利诺伊 BIPA、得州 CUBI；生成式图像/视频还涉及 EU AI Act 第 50 条的标注与披露义务。
-3. **替换所有 TBD** —— 成立年份、注册辖区、团队规模、可用性、定价、法务生效日期。
-4. **可选：补 `og:image`** —— 目前未设置，分享链接时卡片为空白。无技术故障，但需要真实视觉素材。
+1. **产品事实以 zerokit.ai 线上文案为准。** 站上不得出现线上没有的规格、承诺或价格数字；价格一律指向 `https://zerokit.ai/pricing`。
+2. **不写模型厂商与模型名称。** 只说「获得授权的第三方 API」，并声明 Zero Kit 与任何模型厂商无关联。
+3. **法务页分层。** `/privacy/` 与 `/terms/` 只覆盖 zero-agentic.com；产品侧一律引用 `https://zerokit.ai/{terms,privacy,refund,acceptable-use}`，不在公司站替产品作承诺。仍建议上线前由执业律师复核。
+4. **地址标签是「邮寄地址」。** 30 N Gould St 是注册代理地址，不能写成营业地址或办公地址。
+5. **可选：补 `og:image`** —— 目前未设置，分享链接时卡片为空白。无技术故障，但需要真实视觉素材。

@@ -19,12 +19,12 @@ const c = getSiteContent(locale)
     '@type': 'Product',
     name: c.products.entry.name,
     description: c.products.entry.description,
-    category: 'AI 设计生成工具',
+    category: 'AI 创作软件',
     brand: { '@type': 'Brand', name: c.meta.siteName },
     manufacturer: { '@id': 'https://zero-agentic.com/#organization' },
     additionalProperty: {
       '@type': 'PropertyValue',
-      name: '开发状态',
+      name: '可用状态',
       value: c.products.entry.specs.find(({ stamp }) => stamp)?.value,
     },
   }}

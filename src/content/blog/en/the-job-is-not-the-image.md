@@ -53,12 +53,12 @@ to be able to fix the third step without regenerating the first.
 
 And the model has to be replaceable. Models improve on a timescale of months. Any
 architecture that treats a specific model as load-bearing is building on a part
-that is guaranteed to be swapped out. The durable engineering is on either side
+that is certain to be swapped out. The durable engineering is on either side
 of it.
 
-That is the part we are building.
+That is the part we build.
 
 ---
 
-*Zero Agentic's product is in development. Nothing described here is available
-yet.*
+*Zero Kit, the product Zero Agentic builds and operates, is live at
+zerokit.ai.*

@@ -45,4 +45,4 @@ pubDate: 2026-09-06
 
 ---
 
-*Zero Agentic 的产品处于开发中。本文所述内容目前均不可用。*
+*Zero Agentic 开发并运营的产品 Zero Kit 已经上线，地址是 zerokit.ai。*

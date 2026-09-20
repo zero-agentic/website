@@ -4,9 +4,9 @@ import { COMPANY_ADDRESS_TEXT, COMPANY_NAME, CONTACT_EMAIL } from './company-inf
 /**
  * 英文站内容。
  *
- * 硬规则：这里只写可核对的事实。公司成立年份、注册地、团队等尚未由业务方
- * 提供的事实一律写 null，渲染为 TBD 占位，绝不用行业套话填充。
- * 联系邮箱是唯一的例外，理由见 company-info.ts。
+ * 硬规则：这里只写可核对的事实。产品事实以 zerokit.ai 线上文案为准，
+ * 公司事实以注册文件为准。没有来源的数字、客户、团队规模一律不写。
+ * 不出现具体模型厂商或模型名称。
  */
 export const en: ISiteContent = {
   locale: 'en',
@@ -22,7 +22,7 @@ export const en: ISiteContent = {
   meta: {
     siteName: 'Zero Agentic',
     defaultDescription:
-      'Zero Agentic LLC works across cross-border e-commerce, digital marketing, subscription SaaS tools, and international business operations.',
+      'Zero Agentic LLC builds and operates AI creative software. Our first product is Zero Kit — an AI image generator, AI video generator and AI photo editor in one kit.',
   },
 
   nav: {
@@ -38,61 +38,60 @@ export const en: ISiteContent = {
   },
 
   home: {
-    title: 'AI Image & Video Generation Company | Zero Agentic',
+    title: 'AI Creative Software Company | Zero Agentic',
     description:
-      'Zero Agentic builds AI image and video generation tools that deliver production-ready logos, icons, illustrations and video for brands and creators.',
+      'Zero Agentic LLC builds and operates AI creative software. Our first product, Zero Kit, generates images and video and edits photos — live at zerokit.ai.',
     heroLead: 'Zero Agentic',
-    heroTrail: 'AI generation, delivered.',
+    heroTrail: 'AI creative software.',
 
     generalDescription:
-      'AI image generation and AI video generation for brands, developers and creators, carried through to logos, icons, illustrations and video you can put straight to use.',
+      'We build and operate AI creative software for individual creators and small businesses. Our first product, Zero Kit, takes a line of description or a photo and hands back finished work in seconds.',
 
     heroIndex: [
-      { name: 'Image synthesis', note: 'A description, or reference images' },
-      { name: 'Video synthesis', note: 'A description, or a starting frame' },
-      { name: 'Done for you', note: 'Say what you need, then step away' },
+      { name: 'Image generation', note: 'A line of description, or a photo' },
+      { name: 'Video generation', note: 'A description, or a starting image' },
+      { name: 'Photo editing tools', note: 'Seven tools, one job each' },
     ],
 
-    statusLabel: 'One product in development',
+    statusLabel: 'One product, live at zerokit.ai',
     contactCta: 'Get in touch',
 
     sections: {
       capabilities: {
-        title: 'AI image and video generation',
+        title: 'AI image generation, video generation and photo editing',
         intro:
-          'Three things we are building. All of them are still in development and will arrive inside DesignDance — none is sold separately today.',
+          'Three things Zero Kit does. They ship inside one product, and none of them is sold separately.',
         items: [
           {
-            name: 'Image synthesis',
+            name: 'Image generation',
             summary:
-              'Describe what you want, or hand it a reference. Redraw any part of the result, set the exact size you need, and take it away as vector when the job calls for one.',
+              'No prompt to write. Say a line or drop a photo, pick a style, and get finished images back in seconds.',
             specs: [
-              { label: 'Input', value: 'A description, or reference images' },
-              { label: 'Editing', value: 'Redraw any area you select' },
-              { label: 'Size', value: 'Exactly what you ask for' },
-              { label: 'Vector', value: 'SVG' },
+              { label: 'Input', value: 'A line of description, or a photo' },
+              { label: 'Styles', value: '500+ presets' },
+              { label: 'Categories', value: 'Logos, icons, posters, slide graphics' },
+              { label: 'Also', value: 'Game art, portraits, beauty, restoration' },
             ],
           },
           {
-            name: 'Video synthesis',
+            name: 'Video generation',
             summary:
-              'The same idea for video: describe a shot or give it a frame to work from. Long jobs run in the background — close the tab and nothing is lost.',
+              'The same idea for video: describe the shot, or hand it an image and let it move.',
             specs: [
-              { label: 'Input', value: 'A description, or a starting frame' },
-              { label: 'Jobs', value: 'Run in the background' },
-              { label: 'Length', value: '4 to 30 seconds' },
-              { label: 'Formats', value: 'MP4, MOV' },
+              { label: 'Input', value: 'A description, or a starting image' },
+              { label: 'Modes', value: 'Text to video, image to video' },
+              { label: 'Runs in', value: 'The browser' },
             ],
           },
           {
-            name: 'Done for you',
+            name: 'Photo editing tools',
             summary:
-              'Say what you need, then step away. It keeps working without you clicking through it, and hands back finished files.',
+              'Seven single-purpose tools for the work that comes after a photo exists — widen it, clean it up, enlarge it, or set it in motion.',
             specs: [
-              { label: 'How', value: 'Just say what you need' },
-              { label: 'While it runs', value: 'Go do something else' },
-              { label: 'If it stops', value: 'Picks up where it left off' },
-              { label: 'You get', value: 'Files you can use as they are' },
+              { label: 'Tools', value: '7' },
+              { label: 'Repair', value: 'Object removal, inpainting, restoration' },
+              { label: 'Resize', value: 'Outpainting, upscaling to 4K and 8K' },
+              { label: 'Transform', value: 'Style transfer, image to video' },
             ],
           },
         ],
@@ -101,15 +100,15 @@ export const en: ISiteContent = {
       products: {
         title: 'Products',
         intro:
-          'We have one product and it is not out yet. So there is no trial button here and no countdown — we do not have a launch date we could stand behind.',
+          'We have one product. It is live, everything we build goes into it, and you can open it right now.',
         entry: {
-          name: 'DesignDance',
-          tagline: 'Finished design files, not just pictures.',
+          name: 'Zero Kit',
+          tagline: 'AI image generator, AI video generator and AI photo editor in one kit.',
           description:
-            'Built for people who need finished files, not just a picture. Logos come back as vector. App icons come back in every size at once. Restored photos come back big enough to print.',
+            'No prompts to write: say a line or drop a photo, and finished work comes back in seconds, across 500+ styles. Built for individual creators and small businesses.',
           specs: [
-            { label: 'Status', value: 'In development', stamp: true },
-            { label: 'Availability', value: null },
+            { label: 'Status', value: 'Live', stamp: true },
+            { label: 'Availability', value: 'zerokit.ai', href: 'https://zerokit.ai' },
             { label: 'Runs in', value: 'The browser' },
           ],
           scope: [],
@@ -120,111 +119,130 @@ export const en: ISiteContent = {
   },
 
   products: {
-    title: 'DesignDance AI Design Generator | Zero Agentic',
+    title: 'Zero Kit — AI Image, Video and Photo Editing | Zero Agentic',
     description:
-      'DesignDance is an AI design generator for logos, app icons, posters, game assets and photo restoration. Currently in development at Zero Agentic.',
-    heading: 'AI design generation',
+      'Zero Kit is the AI image generator, AI video generator and AI photo editor operated by Zero Agentic LLC, live at zerokit.ai for individual creators and small businesses.',
+    heading: 'AI creative software',
     intro:
-      'DesignDance is an AI design generator in development at Zero Agentic. It is not yet available. The scope below is planned, not a list of features that already work.',
+      'Zero Kit is the product Zero Agentic builds and operates. It has been publicly available at zerokit.ai since September 2026. Below is what it covers today.',
     entry: {
-      name: 'DesignDance',
-      tagline: 'Finished design files, not just pictures.',
+      name: 'Zero Kit',
+      tagline: 'AI image generator, AI video generator and AI photo editor in one kit.',
       description:
-        'Most AI tools hand you an image and stop there. But a logo you cannot scale is not a logo, an icon that exists at one size will not pass review, and a restored photo that falls apart in print was not really restored. DesignDance is built around the file you need at the end, not the prompt you type at the start.',
+        'Most tools hand you a prompt box and expect you to learn how to talk to it. Zero Kit does not. Say a line or drop a photo, pick from more than 500 styles, and finished work comes back in seconds — images, video, or an edit of a photo you already have.',
       specs: [
-          { label: 'Status', value: 'In development', stamp: true },
-        { label: 'Availability', value: null },
+        { label: 'Status', value: 'Live', stamp: true },
+        { label: 'Availability', value: 'zerokit.ai', href: 'https://zerokit.ai' },
         { label: 'Runs in', value: 'The browser' },
-        { label: 'Vector', value: 'SVG' },
-        { label: 'Icon sizes', value: '16 to 1024 px, all of them' },
-        { label: 'Platforms', value: 'Web, iOS, Android, desktop', ref: 1 },
-        { label: 'Pricing', value: null, ref: 2 },
+        { label: 'Styles', value: '500+ presets' },
+        { label: 'Interface', value: '19 languages' },
+        { label: 'Editing tools', value: '7', ref: 1 },
+        { label: 'Payment', value: 'Subscriptions and credit packs', ref: 2 },
+        { label: 'Pricing', value: 'zerokit.ai/pricing', href: 'https://zerokit.ai/pricing' },
+        { label: 'Free tier', value: 'Free daily credits' },
+        { label: 'Models', value: 'Licensed third-party APIs', ref: 3 },
       ],
       scope: [
         {
-          name: 'Logo generation',
+          name: 'Image generation',
           detail:
-            'For websites, apps and store listings. You get the vector original plus every size rendered down from it.',
+            'A line of description or a photo goes in, finished images come back, across more than 500 style presets.',
         },
         {
-          name: 'Icon generation',
-          detail:
-            'Browser favicons and app icons, packaged the way each platform wants them — iOS, Android and desktop included.',
+          name: 'Logos and icons',
+          detail: 'Marks for brands, apps and sites, made from a description or a reference image.',
         },
         {
-          name: 'Commerce and campaign posters',
-          detail:
-            'Layouts for online stores, events, product launches and ads, across a wide range of styles.',
+          name: 'Posters and slide graphics',
+          detail: 'Poster layouts, and artwork for slides and presentations.',
         },
         {
-          name: 'Game assets',
-          detail: 'Scenery, props, characters, and the frames that make them move.',
+          name: 'Game art',
+          detail: 'Scenery, props and characters, in the style you pick.',
+        },
+        {
+          name: 'Wedding, couple and baby portraits',
+          detail: 'Portrait sets built from photographs you already have.',
+        },
+        {
+          name: 'Beauty retouching',
+          detail: 'Portrait retouching on photos you upload.',
         },
         {
           name: 'Photo restoration',
-          detail:
-            'Blurred, damaged or tiny old photos brought back to a size you can actually use.',
+          detail: 'Old, damaged or blurred photographs brought back.',
         },
         {
-          name: 'Wedding and ceremonial portraits',
-          detail:
-            'One or two photos become portraits in the period or regional style you pick.',
+          name: 'Video generation',
+          detail: 'Describe a shot and get video, or hand over an image and let it move.',
         },
         {
-          name: 'Infant milestone portraits',
-          detail: 'Milestone portrait sets made from the photos you already have.',
+          name: 'Editing tools',
+          detail:
+            'Seven tools, one job each: extend an image, remove an object, repaint an area, upscale to 4K or 8K, restore a photo, transfer a style, animate a still.',
         },
       ],
     },
-    scopeLabel: 'What it will cover',
-    scopeNote:
-      'What we plan to cover. Not a feature list, not a promise, and likely to change before launch.',
+    scopeLabel: 'What it covers',
+    scopeNote: 'What Zero Kit covers today. Each item is available at zerokit.ai.',
     specLabel: 'At a glance',
     footnotes: [
-      { n: 1, text: 'Each platform gets the packaging format it expects, all from one source file.' },
-      { n: 2, text: 'Not set. Pricing will be published before the product is available.' },
+      {
+        n: 1,
+        text: 'Image extender, object remover, inpainting tool, image upscaler, photo restoration, style transfer, and image to video. Each one is a separate page under zerokit.ai/tools.',
+      },
+      {
+        n: 2,
+        text: 'Monthly or yearly subscriptions, plus one-time credit packs. Pricing is published at zerokit.ai/pricing.',
+      },
+      {
+        n: 3,
+        text: 'Zero Kit is an independent product. The models behind it are reached through licensed third-party APIs, and Zero Kit is not affiliated with, sponsored by, or endorsed by any model provider.',
+      },
     ],
   },
 
   about: {
-    title: 'About Zero Agentic | Global Digital Business',
+    title: 'About Zero Agentic | AI Creative Software Company',
     description:
-      'Learn about Zero Agentic LLC, its cross-border digital business, company details, and how to get in touch.',
+      'Zero Agentic LLC is a Wyoming limited liability company formed in September 2026. It builds and operates AI creative software; its first product is Zero Kit.',
     heading: 'About Zero Agentic',
     statement: [
-      'Zero Agentic LLC is a US company working across cross-border e-commerce, digital marketing, subscription SaaS tools, and international business operations.',
-      'We develop and operate digital products and support their distribution, customer acquisition, and day-to-day delivery across international markets.',
-      'Our US business account supports these operations. We use it to pay SaaS subscriptions, advertising costs, and supplier invoices, and to receive revenue from overseas business activities.',
+      'Zero Agentic LLC builds and operates AI creative software. It is a limited liability company formed in Wyoming in September 2026.',
+      'Our first product is Zero Kit — an AI image generator, AI video generator and AI photo editor in one kit, publicly available at zerokit.ai since September 2026. It is made for individual creators and small businesses, runs in the browser in 19 interface languages, and is paid for through monthly or yearly subscriptions and one-time credit packs, alongside free daily credits.',
+      `Questions about the company, the product, billing, legal or privacy all reach us at ${CONTACT_EMAIL}.`,
     ],
     servicesLabel: 'What we do',
     services: [
       {
-        title: 'Cross-border e-commerce',
-        body: 'We operate online commerce activities for customers and markets across borders.',
+        title: 'Product development',
+        body: 'We design, build and operate Zero Kit. It is our only product, and everything we ship goes into it.',
       },
       {
-        title: 'Digital marketing',
-        body: 'We plan and operate digital campaigns, paid advertising, and online customer acquisition for international business.',
+        title: 'Model integration',
+        body: 'We integrate licensed third-party model APIs into the product and review the content that moves through them.',
       },
       {
-        title: 'Subscription SaaS tools',
-        body: 'We develop and operate subscription software for digital and creative workflows.',
+        title: 'Customer support',
+        body: 'We answer product, account and billing questions by email, in the same place as legal and privacy requests.',
       },
       {
-        title: 'International operations',
-        body: 'We coordinate the software services, suppliers, payments, and revenue flows needed to operate across markets.',
+        title: 'Content safety and compliance',
+        body: 'We maintain an acceptable use policy, screen prompts and uploads against it, and act on reports of misuse.',
       },
     ],
     factsLabel: 'The company',
     facts: [
       { label: 'Legal name', value: COMPANY_NAME },
-      { label: 'Entity type', value: 'Limited liability company' },
-      { label: 'Business address', value: COMPANY_ADDRESS_TEXT },
-      { label: 'Domain', value: 'zero-agentic.com', href: 'https://zero-agentic.com' },
+      { label: 'Entity type', value: 'Wyoming limited liability company' },
+      { label: 'Formed', value: 'September 2026' },
+      { label: 'Mailing address', value: COMPANY_ADDRESS_TEXT },
+      { label: 'Product', value: 'Zero Kit', href: 'https://zerokit.ai' },
+      { label: 'Website', value: 'zero-agentic.com', href: 'https://zero-agentic.com' },
     ],
     contact: {
       heading: 'Contact',
-      body: 'For partnerships, press, careers, legal, or privacy inquiries, email us at:',
+      body: 'For support, partnerships, press, legal, or privacy inquiries, email us at:',
       email: CONTACT_EMAIL,
     },
   },
@@ -232,7 +250,7 @@ export const en: ISiteContent = {
   blog: {
     title: 'AI Image & Video Generation Notes | Zero Agentic',
     description:
-      'Zero Agentic notes on AI image generation, AI video generation and turning generated media into production-ready design files.',
+      'Zero Agentic notes on AI image generation, AI video generation and turning generated media into work you can actually use.',
     heading: 'AI generation notes',
     intro:
       'Notes on what we are building and why. Posted when there is something worth writing down, not on a schedule.',
@@ -245,18 +263,20 @@ export const en: ISiteContent = {
   legal: {
     privacy: {
       title: 'Privacy Policy — Zero Agentic',
-      description: 'How Zero Agentic LLC collects, uses, and retains personal information.',
+      description:
+        'How Zero Agentic LLC collects, uses, and retains personal information on zero-agentic.com.',
       heading: 'Privacy Policy',
       effectiveLabel: 'Effective',
-      effective: 'September 6, 2026',
+      effective: 'September 19, 2026',
       intro:
-        'This policy describes how Zero Agentic LLC (“Zero Agentic”, “we”) handles personal information across this website and, once released, our products.',
+        'This policy describes how Zero Agentic LLC (“Zero Agentic”, “we”) handles personal information on this website, zero-agentic.com.',
       clauses: [
         {
           n: '1',
           title: 'Scope',
           body: [
-            'This policy covers zero-agentic.com and any Zero Agentic product that links to it.',
+            'This policy covers zero-agentic.com, the company website, and nothing else.',
+            'Our product, Zero Kit, is governed by its own privacy policy at https://zerokit.ai/privacy. Accounts, uploads, generated output and payments belong to that policy, not to this one.',
             'This website is a static site. It has no accounts, no comment system, and no forms that submit to us. Visiting it does not create a record on our systems beyond what our hosting provider logs.',
           ],
         },
@@ -281,46 +301,19 @@ export const en: ISiteContent = {
           n: '4',
           title: 'Product data',
           body: [
-            'Our products are not released. When they are, this section will describe account data, uploaded content, generated output, and payment handling, and will be updated before the product is made available.',
-            'Until that time no product data is collected, because there is no product to collect it.',
+            'This website collects no product data. What Zero Kit collects, how long it keeps it, and who it is shared with is set out in the Zero Kit Privacy Policy at https://zerokit.ai/privacy.',
           ],
         },
         {
           n: '5',
-          title: 'Uploaded images and biometric information',
-          body: [
-            'Several planned product features work from photographs of people — portrait restoration, ceremonial portraits, and infant milestone portraits among them. A photograph of a face may constitute biometric information under laws including the Illinois Biometric Information Privacy Act and the Texas Capture or Use of Biometric Identifier Act.',
-            'Before any such feature is released, we will publish what is extracted from an uploaded image, how long it is kept, whether it leaves our systems, and how to have it deleted — and we will obtain the consent those laws require.',
-            'This clause is stated here in advance so that the commitment exists before the feature does.',
-          ],
-        },
-        {
-          n: '6',
-          title: 'Synthetic content and transparency',
-          body: [
-            'Our products produce synthetic images and video. Article 50 of the EU Artificial Intelligence Act requires that such output be marked in a machine-readable format and, for certain categories, disclosed to the people who encounter it.',
-            'Before release we will publish how generated output is marked, which provenance standard we implement, and what a recipient can verify. Our current intent is durable provenance metadata following the C2PA specification.',
-            'We will not remove or suppress provenance markings from output we generate.',
-          ],
-        },
-        {
-          n: '7',
-          title: 'Model training',
-          body: [
-            'We do not train models on customer-uploaded content without separate, specific, opt-in consent.',
-            'Where a generation request is served by a third-party model provider, that provider’s own terms govern what it does with the request. Before release we will name every such provider, and state for each whether it may retain or train on request data — and where a provider’s terms permit training we will say so plainly rather than defer to a linked document.',
-          ],
-        },
-        {
-          n: '8',
           title: 'Legal bases for processing',
           body: [
-            'Where the GDPR or UK GDPR applies, we rely on: performance of a contract, for processing needed to provide a service you asked for; legitimate interests, for handling correspondence and securing our systems; consent, for biometric processing and for any model training on your content; and legal obligation, where a law requires us to retain or disclose information.',
+            'Where the GDPR or UK GDPR applies to the processing described here, we rely on: legitimate interests, for handling correspondence and securing our systems; consent, where we ask for it; and legal obligation, where a law requires us to retain or disclose information.',
             'Consent, where it is the basis, can be withdrawn at any time without affecting processing already carried out.',
           ],
         },
         {
-          n: '9',
+          n: '6',
           title: 'Sale and sharing of personal information',
           body: [
             'We do not sell personal information, and we do not share it for cross-context behavioural advertising, as those terms are defined under the California Consumer Privacy Act.',
@@ -329,7 +322,7 @@ export const en: ISiteContent = {
           ],
         },
         {
-          n: '10',
+          n: '7',
           title: 'Your rights',
           body: [
             'Depending on where you live, you may have the right to access, correct, export, or delete personal information we hold, to object to or restrict its processing, and to withdraw consent. Residents of California, and residents of the EEA and UK, have specific statutory rights in this area.',
@@ -338,31 +331,30 @@ export const en: ISiteContent = {
           ],
         },
         {
-          n: '11',
+          n: '8',
           title: 'Retention',
           body: [
             'Correspondence is kept while the matter is open and for a reasonable period afterwards.',
-            'Product retention periods are not yet set and will be published before the product is released.',
+            'Retention inside the product is described in the Zero Kit Privacy Policy.',
           ],
         },
         {
-          n: '12',
+          n: '9',
           title: 'Children',
           body: [
             'This website is not directed to children and we do not knowingly collect personal information from them.',
-            'The planned infant portrait feature works from photographs supplied by an adult. The consent and handling rules for that case will be published with the feature.',
           ],
         },
         {
-          n: '13',
+          n: '10',
           title: 'International transfers',
           body: [
-            'Zero Agentic is a United States entity and our providers are largely US-based. Using this site or our products may involve transferring information to the United States.',
-            'Where we transfer personal information out of the EEA or UK, we will identify the transfer mechanism we rely on before any product processing begins.',
+            'Zero Agentic LLC is a United States entity. Emailing us means your message is received and stored in the United States.',
+            'Transfers carried out in connection with the product are described in the Zero Kit Privacy Policy.',
           ],
         },
         {
-          n: '14',
+          n: '11',
           title: 'Security and breach notification',
           body: [
             'We take reasonable technical and organisational measures to protect information in our care. No method of transmission or storage is completely secure, and we do not claim otherwise.',
@@ -370,23 +362,23 @@ export const en: ISiteContent = {
           ],
         },
         {
-          n: '15',
+          n: '12',
           title: 'Controller and contact details',
           body: [
             'Zero Agentic LLC is the controller of the personal information described in this policy.',
-            `Business address: ${COMPANY_ADDRESS_TEXT}`,
+            `Mailing address: ${COMPANY_ADDRESS_TEXT}`,
             `Contact for all privacy matters: ${CONTACT_EMAIL}`,
           ],
         },
         {
-          n: '16',
+          n: '13',
           title: 'Changes',
           body: [
             'When this policy changes materially we will update the effective date and, where the change affects information we already hold, contact affected people directly.',
           ],
         },
         {
-          n: '17',
+          n: '14',
           title: 'Contact',
           body: [`Privacy questions and data requests: ${CONTACT_EMAIL}`],
         },
@@ -395,12 +387,12 @@ export const en: ISiteContent = {
 
     terms: {
       title: 'Terms of Service — Zero Agentic',
-      description: 'The terms governing use of the Zero Agentic website and products.',
+      description: 'The terms governing use of the Zero Agentic company website.',
       heading: 'Terms of Service',
       effectiveLabel: 'Effective',
-      effective: 'September 6, 2026',
+      effective: 'September 19, 2026',
       intro:
-        'These terms govern your use of zero-agentic.com and, once released, the products operated by Zero Agentic LLC.',
+        'These terms govern your use of zero-agentic.com, the company website of Zero Agentic LLC.',
       clauses: [
         {
           n: '1',
@@ -413,113 +405,102 @@ export const en: ISiteContent = {
           n: '2',
           title: 'The website',
           body: [
-            'This site is informational. It describes a company and a product that is in development.',
-            'Nothing on this site is an offer to sell, a commitment to release, or a guarantee that any described capability will exist in the form described. Statements about products in development are statements of current intent.',
+            'This site is informational. It describes Zero Agentic LLC and the product we operate.',
+            'Nothing on this site is an offer to sell or a commitment that any described capability will exist in the form described. Product features and pricing are stated at zerokit.ai and can change there.',
           ],
         },
         {
           n: '3',
-          title: 'Products',
+          title: 'Zero Kit',
           body: [
-            'Our products are not released. Product-specific terms — accounts, acceptable use, content licensing, output ownership, payment, and cancellation — will be published as a separate agreement before any product is made available, and using a product will require accepting it.',
+            'Use of Zero Kit is governed by its own agreement at https://zerokit.ai/terms, together with the policies published alongside it: https://zerokit.ai/privacy, https://zerokit.ai/refund, and https://zerokit.ai/acceptable-use.',
+            'Accounts, uploaded content, generated output, payment, refunds and cancellation are covered by those documents, not by these terms.',
           ],
         },
         {
           n: '4',
-          title: 'Your content',
+          title: 'Content and generated output',
           body: [
-            'When product terms take effect, content you upload remains yours. We will take only the licence needed to operate the service on your behalf — to store your content, process it, and return the result to you.',
-            'You will be responsible for having the rights to what you upload, including the consent of any identifiable person in a photograph.',
+            'This website accepts no uploads and generates nothing. Ownership of content you upload to Zero Kit, and of the output it returns to you, is set out in the Zero Kit Terms of Service at https://zerokit.ai/terms.',
           ],
         },
         {
           n: '5',
-          title: 'Generated output',
+          title: 'Acceptable use',
           body: [
-            'The legal status of AI-generated material is unsettled and varies by jurisdiction. In the United States, works produced without sufficient human authorship may not be eligible for copyright protection.',
-            'We will assign to you whatever rights in generated output we are able to assign. We cannot warrant that output is protectable, that it is free of resemblance to existing works, or that using it will not infringe a third party’s rights.',
-            'Generated output will carry provenance markings as described in the Privacy Policy. Removing or falsifying those markings is a breach of these terms.',
+            'Our product prohibits unlawful use and the generation of material that harms, sexualises, impersonates or misrepresents real people. The full list of prohibited uses is in the Zero Kit Acceptable Use Policy at https://zerokit.ai/acceptable-use.',
+            'We may suspend or terminate access for violations of that policy.',
           ],
         },
         {
           n: '6',
-          title: 'Acceptable use',
+          title: 'Copyright complaints',
           body: [
-            'You may not use our products to generate material that is unlawful; that sexualises minors, including the synthetic depictions California Assembly Bill 1831 addresses; that depicts a real person without their consent in a sexual, defamatory, or deceptive context; that impersonates a person or entity in order to deceive; or that infringes another party’s intellectual property.',
-            'Generating a real person’s likeness or voice without authorisation may also violate digital-replica and right-of-publicity laws, including the Tennessee ELVIS Act and California Assembly Bills 1836 and 2602. Nonconsensual sexually explicit depictions carry separate liability under laws such as California Assembly Bill 602. Compliance is your responsibility.',
-            'We may suspend or terminate access for violations of this clause.',
+            'Notices of alleged copyright infringement concerning material stored on our product are handled under the Zero Kit Terms of Service at https://zerokit.ai/terms.',
           ],
         },
         {
           n: '7',
-          title: 'Copyright complaints',
+          title: 'Intellectual property',
           body: [
-            'We will respond to notices of alleged copyright infringement concerning material stored on our services in accordance with the Digital Millennium Copyright Act.',
-            'Our designated agent for receiving such notices, and the address for submitting them, will be registered and published here before any service that hosts user content is made available.',
+            'The Zero Agentic and Zero Kit names, marks, site design, and content are ours or our licensors’. These terms grant you no licence to them.',
           ],
         },
         {
           n: '8',
-          title: 'Intellectual property',
-          body: [
-            'The Zero Agentic name, marks, site design, and content are ours or our licensors’. These terms grant you no licence to them.',
-          ],
-        },
-        {
-          n: '9',
           title: 'No warranty',
           body: [
             'This website is provided “as is” and “as available”, without warranties of any kind, express or implied, including merchantability, fitness for a particular purpose, and non-infringement.',
           ],
         },
         {
-          n: '10',
+          n: '9',
           title: 'Limitation of liability',
           body: [
             'To the maximum extent permitted by law, Zero Agentic LLC is not liable for indirect, incidental, special, consequential, or punitive damages, or for lost profits, revenue, or data, arising from your use of this website.',
           ],
         },
         {
-          n: '11',
+          n: '10',
           title: 'Indemnification',
           body: [
-            'You agree to indemnify and hold harmless Zero Agentic LLC against claims, damages, and reasonable costs arising from your breach of these terms, from content you supply, or from your use of generated output — including claims that such use infringed a third party’s rights.',
+            'You agree to indemnify and hold harmless Zero Agentic LLC against claims, damages, and reasonable costs arising from your breach of these terms or from your use of this website.',
+          ],
+        },
+        {
+          n: '11',
+          title: 'Dispute resolution',
+          body: [
+            'We would rather resolve a dispute by email than in a forum. Before filing anything, contact us and give us thirty days to respond.',
+            'If a dispute is not resolved that way, it is brought exclusively in the state or federal courts located in Sheridan County, Wyoming, and you and we each consent to the personal jurisdiction of those courts.',
           ],
         },
         {
           n: '12',
-          title: 'Dispute resolution',
+          title: 'Governing law',
           body: [
-            'We would rather resolve a dispute by email than in a forum. Before filing anything, contact us and give us thirty days to respond.',
-            'Whether disputes are resolved by arbitration, and whether class actions are waived, is to be determined and will be stated here before these terms take effect. Nothing here currently waives any right you would otherwise have.',
+            'These terms are governed by the laws of the State of Wyoming, United States, without regard to conflict-of-laws rules.',
           ],
         },
         {
           n: '13',
-          title: 'Governing law',
-          body: [
-            'These terms are governed by the laws of the jurisdiction in which Zero Agentic LLC is organised, without regard to conflict-of-laws rules. The specific jurisdiction and venue are to be determined and will be stated here before these terms take effect.',
-          ],
-        },
-        {
-          n: '14',
           title: 'General',
           body: [
             'If any provision of these terms is held unenforceable, the remainder stays in effect and the unenforceable provision is limited to the minimum extent necessary.',
             'You may not assign these terms without our written consent. We may assign them in connection with a merger, acquisition, or sale of assets.',
-            'These terms, together with any product-specific agreement and the Privacy Policy, are the entire agreement between you and Zero Agentic LLC regarding this website.',
+            'These terms, together with the Privacy Policy, are the entire agreement between you and Zero Agentic LLC regarding this website. The Zero Kit agreement covers the product separately.',
             'A failure to enforce a provision is not a waiver of it.',
           ],
         },
         {
-          n: '15',
+          n: '14',
           title: 'Changes',
           body: [
             'We may update these terms. Material changes will be reflected in the effective date above. Continued use after a change constitutes acceptance.',
           ],
         },
         {
-          n: '16',
+          n: '15',
           title: 'Contact',
           body: [`Questions about these terms: ${CONTACT_EMAIL}`],
         },

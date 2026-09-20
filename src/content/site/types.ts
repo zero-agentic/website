@@ -32,7 +32,7 @@ export interface IProductEntry {
   tagline: string
   description: string
   specs: ISpecRow[]
-  /** 计划覆盖的品类，产品未上线时以「planned scope」呈现 */
+  /** 产品覆盖的品类与工具 */
   scope: { name: string; detail: string }[]
 }
 
